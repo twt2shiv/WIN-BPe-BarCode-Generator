@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>BharatPe - Barcode Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Calibri, Helvetica;
+      overflow: hidden;
+    }
+
+    a,
+    a:link,
+    a:visited,
+    a:active {
+      color: #2980b9;
+    }
+
+    a:hover {
+      background-color: #2980b9;
+      color: #fff;
+    }
+
+    div.show-menu {
+      position: absolute;
+      width: 80px;
+      height: 100%;
+      z-index: 1;
+      background: rgb(198 198 198 / 37%);
+    }
+
+    div.show-menu span {
+      position: absolute;
+      top: 45%;
+      left: 30%;
+      font-size: 60px;
+      font-weight: bold;
+      color: #2055a4;
+      text-shadow: 0 -1px 0 #888;
+    }
+
+    .invisible {
+      transition: all 200ms cubic-bezier(0.77, 0, 0.175, 1);
+      -webkit-transition: all 200ms cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    div.invisible {
+      background: rgba(0, 0, 0, 0);
+    }
+
+    span.invisible {
+      opacity: 0;
+    }
+
+    /* navigation menu */
+    nav {
+      position: relative;
+      width: 160px;
+      height: 100%;
+      padding: 25px;
+      color: white;
+      transform: translate(-190px);
+      -ms-transform: translate(-190px);
+      -webkit-transform: translate(-190px);
+    }
+
+    nav,
+    nav.slide {
+      transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+      -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    nav.slide {
+      transform: translate(10px);
+      -ms-transform: translate(10px);
+      -webkit-transform: translate(10px);
+    }
+
+    nav img {
+      width: 100px;
+      margin-bottom: 25px;
+    }
+
+    nav ul {
+      list-style-type: none;
+      margin-bottom: 20px;
+      padding-top: 15px;
+      border-top: 1px dotted #999;
+      text-transform: uppercase;
+    }
+
+    nav li {
+      font-size: 14px;
+      color: #fff;
+    }
+
+    nav li h4 {
+      margin-bottom: 5px;
+      font-size: 17px;
+      color: white;
+    }
+
+    /* main stage and moving viewport */
+    div.main {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: #2055a4;
+      perspective: 1000px;
+      -moz-perspective: 1000px;
+      -webkit-perspective: 1000px;
+      perspective-origin: 50% 50%;
+      -moz-perspective-origin: 50% 50%;
+      -webkit-perspective-origin: 50% 50%;
+    }
+
+    div.viewport {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding-left: 100px;
+      background-color: #f5f5f5;
+      transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+      -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    div.viewport>h3 {
+      margin-bottom: 30px;
+      font-family: Oswald;
+      font-size: 4em;
+      color: #e74c3c;
+    }
+
+    div.viewport>p {
+      margin-bottom: 40px;
+    }
+
+    div.viewport>p span {
+      font-family: Lora;
+      font-size: 2em;
+      color: #000;
+    }
+
+    div.moveit {
+      transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+      -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+      transform: rotateY(-20deg) translateZ(0px) translateX(300px);
+      -ms-transform: rotateY(-20deg) translateZ(0px) translateX(300px);
+      -webkit-transform: rotateY(-20deg) translateZ(0px) translateX(300px);
+    }
+
+    input[type=text] {
+      padding: 6px;
+      margin-right: 10px;
+      background-color: #fff;
+      border-radius: 2px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-top: 1px solid #8e8f8f;
+      letter-spacing: 2px;
+      font-weight: 550;
+    }
+
+    input[type=text]:focus {
+      border-color: #bee6fd;
+      border-top-color: #98d1ef;
+      outline: none;
+      color: #fff;
+      background-color: #2055a4;
+    }
+
+    button {
+      padding: 6px;
+      background: linear-gradient(to bottom, #f2f2f2 45%, #ebebeb 45%, #cfcfcf);
+      border-color: #8e8f8f;
+      border-radius: 3px;
+      box-shadow: inset 0 0 0 1px #fffc;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+
+<body translate="no">
+  <link href="https://fonts.googleapis.com/css?family=Oswald:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+  <div class="show-menu">
+    <span>»</span>
+    <nav>
+      <img src="http://webcare.eve-hosting.com/logo.png">
+      <ul>
+        <li>
+          <h4>Printer Info</h4>
+        </li>
+        <li id="printerName">Name: N/A</li>
+        <li id="printerModel">Model: N/A</li>
+        <li id="printerBrand">Brand: N/A</li>
+        <li id="printerDefault">Default: No</li>
+      </ul>
+      <ul>
+        <li>
+          <h4>Version</h4>
+        </li>
+        <li>v0.1</li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="main">
+    <div class="viewport">
+      <br><br>
+      <h5>Generate Label (IMEI/ SN)</h5>
+      <input type="text" id="inputNumber" placeholder="XXXX-XXXXX-XXXXX" value="864946060293114" readonly>
+      <button id="generateBtn">Find</button>
+      <button id="printBtn" disabled>Print</button>
+      <div id="loader" style="display: none; position: fixed; top: 40%; left: 30%; transform: translate(-50%, -50%);">
+        <img src="https://iili.io/2JSdpkP.gif" alt="Loading...">
+      </div>
+      <div id="barcodePreview" style="position: relative;"></div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
+  <script src="renderer.js"></script>
+  <script>
+    // Generate Barcode and Display Label
+    // document.getElementById('generateBtn').addEventListener('click', () => {
+    //   const number = document.getElementById('inputNumber').value.trim();
+    //   if (number) {
+    //     // Create a hidden canvas for barcode generation
+    //     const canvas = document.createElement('canvas');
+
+    //     // Generate barcode without footer text and with specified dimensions
+    //     JsBarcode(canvas, number, {
+    //       format: 'CODE128',
+    //       width: 1, // Adjusted for precise sizing
+    //       height: 10, // Height set to 10 pixels
+    //       displayValue: false, // Removes the footer text
+    //       margin: 0 // Removes default margins
+    //     });
+
+    //     // Resize the canvas to desired width (120px) while maintaining height (10px)
+    //     const desiredWidth = 120;
+    //     const desiredHeight = 10;
+    //     const resizedCanvas = document.createElement('canvas');
+    //     resizedCanvas.width = desiredWidth;
+    //     resizedCanvas.height = desiredHeight;
+    //     const ctx = resizedCanvas.getContext('2d');
+
+    //     // Draw the original barcode onto the resized canvas
+    //     ctx.drawImage(canvas, 0, 0, desiredWidth, desiredHeight);
+
+    //     const barcodeDataURL = resizedCanvas.toDataURL();
+
+    //     // Read the Template File
+    //     const templatePath = path.join(__dirname, 'template', 'printLabel.html');
+    //     fs.readFile(templatePath, 'utf-8', (err, data) => {
+    //       if (err) {
+    //         console.error('Error reading template:', err);
+    //         ipcRenderer.send('show-error', 'Error generating barcode. Please try again.');
+    //         return;
+    //       }
+
+    //       // Replace the {barcode} Placeholder with the Generated Barcode
+    //       const labelHTML = data.replace('{barcode}', barcodeDataURL);
+
+    //       // Insert the Label HTML into the 'barcodePreview' Div
+    //       document.getElementById('barcodePreview').innerHTML = labelHTML;
+    //     });
+    //   } else {
+    //     ipcRenderer.send('show-error', 'Please enter a number.');
+    //   }
+    // });
+
+    // Handle Print Button Click
+    // document.getElementById('printBtn').addEventListener('click', () => {
+    //   const labelContent = document.getElementById('barcodePreview').innerHTML;
+    //   if (labelContent) {
+    //     ipcRenderer.send('print-label', labelContent);
+    //   } else {
+    //     ipcRenderer.send('show-error', 'Please generate a barcode first.');
+    //   }
+    // });
+
+    // Function to Populate Printer Info (Optional)
+    function populatePrinterInfo() {
+      // Placeholder: Implement actual printer retrieval logic if needed
+      const printerData = {
+        name: "HP LaserJet Pro",
+        model: "M404dn",
+        brand: "HP",
+        default: true
+      };
+
+      // Ensure you have elements with these IDs or adjust accordingly
+      // For example:
+      // <p id="printerName"></p>
+      // <p id="printerModel"></p>
+      /*
+      document.getElementById('printerName').textContent = `Name: ${printerData.name}`;
+      document.getElementById('printerModel').textContent = `Model: ${printerData.model}`;
+      document.getElementById('printerBrand').textContent = `Brand: ${printerData.brand}`;
+      document.getElementById('printerDefault').textContent = `Default: ${printerData.default ? 'Yes' : 'No'}`;
+      */
+    }
+
+    // Call function to populate printer info on page load (Optional)
+    // window.onload = populatePrinterInfo;
+
+    $(".show-menu").mouseover(function () {
+      $(this).addClass("invisible");
+      $(".show-menu span").addClass("invisible");
+      $("nav").addClass("slide");
+      $(".viewport").addClass("moveit");
+    });
+
+    $(".main").mouseover(function (e) {
+      $(this).removeClass("invisible");
+      $(".viewport").removeClass("moveit");
+      $("nav").removeClass("slide");
+      $(".show-menu").removeClass("invisible");
+      $(".show-menu span").removeClass("invisible");
+    });
+  </script>
+</body>
+
+</html>

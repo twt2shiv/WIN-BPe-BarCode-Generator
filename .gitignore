@@ -1,0 +1,16 @@
+# Node modules
+node_modules/
+# Logs
+logs
+*.log
+# Build output
+out/
+dist/
+# Electron cache
+.cache/
+# Mac specific files
+.DS_Store
+# Windows specific files
+Thumbs.db
+# Environment files
+.env

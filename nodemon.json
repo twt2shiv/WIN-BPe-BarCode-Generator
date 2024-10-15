@@ -1,0 +1,11 @@
+{
+    "watch": [
+        "main.js",
+        "preload.js"
+    ],
+    "ext": "js,html",
+    "exec": "electron .",
+    "ignore": [
+        "node_modules/"
+    ]
+}

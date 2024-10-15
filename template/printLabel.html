@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    .label-card {
+      background-color: #fff;
+      border: 1px solid black;
+      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: left;
+      font-size: 14px;
+      width: 48%;
+      height: 150px;
+      overflow: hidden;
+      top: 35px;
+      position: relative;
+    }
+
+    .brand {
+      padding: 10px 5px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid black;
+      height: 4mm;
+    }
+
+    .brand h2 {
+      font-size: 15px;
+      color: #000;
+    }
+
+    .brand p {
+      color: black;
+      font-size: 3px;
+      line-height: 5px;
+    }
+
+    .product-info {
+      padding: 6px 5px;
+      max-height: 23.5mm;
+      min-height: 32px;
+      overflow: hidden;
+    }
+
+    .label-card p {
+      font-size: 11px;
+      white-space: nowrap;
+      line-height: 15px;
+    }
+
+    .up {
+      align-items: center;
+      display: flex;
+    }
+    .icons {
+      right: 10px;
+      position: absolute;
+    }
+    .icons span {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .down .barcode {
+      width: 240px;
+      height: 20px;
+    }
+
+    .product-info .trash {
+      width: 50px;
+    }
+
+    .icons img {
+      width: 95px;
+      height: 45px;
+    }
+
+    .symb {
+      font-size: 15px;
+      line-height: 0;
+    }
+
+    .amp {
+      display: flex;
+      align-items: center;
+    }
+
+    .brand {
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .brand .brand_img {
+      width: 70px;
+      height: 20px;
+    }
+
+    .down {
+      min-height: 100%;
+
+      padding: 0 5px;
+      font-size: 5px;
+      overflow: hidden;
+      line-height: 7px;
+    }
+
+    .country {
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="label-card box">
+    <div class="brand">
+      <img class="brand_img" src="https://brand-sticker.vercel.app/brand.png" alt="brand">
+      <div>
+        <p>艾体威尔电子技术（北京）有限公司</p>
+        <p>Vanstone Electronic (Beijing) Co., Ltd.</p>
+      </div>
+    </div>
+    <div class="product-info">
+      <div class="up">
+        <div>
+          <p>Name : {name}</p>
+          <p>Model : {model}</p>
+          <p class="amp">Input : {input.voltage} <span class="symb">⎓</span> {input.current}</p>
+          <p>P/N : {pnCode}</p>
+        </div>
+        <div class="icons"><img src="https://iili.io/2JOmNOQ.png" alt="icon"></div>
+      </div>
+    </div>
+    <div class="down">
+      <img class="barcode" src="{barcode}" alt="barcode">
+      <div class="country">
+        <p>S/N : {serialNo}</p>
+        <p>{madeBy}</p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+{
+  "name": "my-electron-app",
+  "version": "1.0.0",
+  "description": "A basic Electron.js application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "dev": "nodemon --watch main.js --exec \"electron .\"",
+    "prod": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.bpe-barcode-generator.mscorpres",
+    "productName": "BPe-Barcode Generator",
+    "copyright": "Copyright © 2024",
+    "directories": {
+      "buildResources": "build"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/build/favicon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^25.9.8",
+    "electron-builder": "^25.1.8",
+    "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "jsbarcode": "^3.11.6"
+  }
+}
