@@ -183,6 +183,14 @@
       box-shadow: inset 0 0 0 1px #fffc;
       box-sizing: border-box;
     }
+
+    /* #barcodePreview {
+      
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
+      position: relative;
+    } */
   </style>
 </head>
 
@@ -194,21 +202,19 @@
   <div class="show-menu">
     <span>»</span>
     <nav>
-      <img src="http://webcare.eve-hosting.com/logo.png">
+      <img src="https://iili.io/2dH9WzP.png" style="width: 64px; height: 64px;">
       <ul>
         <li>
           <h4>Printer Info</h4>
         </li>
         <li id="printerName">Name: N/A</li>
-        <li id="printerModel">Model: N/A</li>
-        <li id="printerBrand">Brand: N/A</li>
         <li id="printerDefault">Default: No</li>
       </ul>
       <ul>
         <li>
           <h4>Version</h4>
         </li>
-        <li>v0.1</li>
+        <li id="appVersion">v0.1</li>
       </ul>
     </nav>
   </div>
@@ -217,7 +223,7 @@
     <div class="viewport">
       <br><br>
       <h5>Generate Label (IMEI/ SN)</h5>
-      <input type="text" id="inputNumber" placeholder="XXXX-XXXXX-XXXXX" value="864946060293114" readonly>
+      <input type="text" id="inputNumber" placeholder="XXXXX-XXXXX-XXXXX" value="864946060293114" readonly>
       <button id="generateBtn">Find</button>
       <button id="printBtn" disabled>Print</button>
       <div id="loader" style="display: none; position: fixed; top: 40%; left: 30%; transform: translate(-50%, -50%);">
@@ -228,91 +234,7 @@
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
   <script src="renderer.js"></script>
-  <script>
-    // Generate Barcode and Display Label
-    // document.getElementById('generateBtn').addEventListener('click', () => {
-    //   const number = document.getElementById('inputNumber').value.trim();
-    //   if (number) {
-    //     // Create a hidden canvas for barcode generation
-    //     const canvas = document.createElement('canvas');
-
-    //     // Generate barcode without footer text and with specified dimensions
-    //     JsBarcode(canvas, number, {
-    //       format: 'CODE128',
-    //       width: 1, // Adjusted for precise sizing
-    //       height: 10, // Height set to 10 pixels
-    //       displayValue: false, // Removes the footer text
-    //       margin: 0 // Removes default margins
-    //     });
-
-    //     // Resize the canvas to desired width (120px) while maintaining height (10px)
-    //     const desiredWidth = 120;
-    //     const desiredHeight = 10;
-    //     const resizedCanvas = document.createElement('canvas');
-    //     resizedCanvas.width = desiredWidth;
-    //     resizedCanvas.height = desiredHeight;
-    //     const ctx = resizedCanvas.getContext('2d');
-
-    //     // Draw the original barcode onto the resized canvas
-    //     ctx.drawImage(canvas, 0, 0, desiredWidth, desiredHeight);
-
-    //     const barcodeDataURL = resizedCanvas.toDataURL();
-
-    //     // Read the Template File
-    //     const templatePath = path.join(__dirname, 'template', 'printLabel.html');
-    //     fs.readFile(templatePath, 'utf-8', (err, data) => {
-    //       if (err) {
-    //         console.error('Error reading template:', err);
-    //         ipcRenderer.send('show-error', 'Error generating barcode. Please try again.');
-    //         return;
-    //       }
-
-    //       // Replace the {barcode} Placeholder with the Generated Barcode
-    //       const labelHTML = data.replace('{barcode}', barcodeDataURL);
-
-    //       // Insert the Label HTML into the 'barcodePreview' Div
-    //       document.getElementById('barcodePreview').innerHTML = labelHTML;
-    //     });
-    //   } else {
-    //     ipcRenderer.send('show-error', 'Please enter a number.');
-    //   }
-    // });
-
-    // Handle Print Button Click
-    // document.getElementById('printBtn').addEventListener('click', () => {
-    //   const labelContent = document.getElementById('barcodePreview').innerHTML;
-    //   if (labelContent) {
-    //     ipcRenderer.send('print-label', labelContent);
-    //   } else {
-    //     ipcRenderer.send('show-error', 'Please generate a barcode first.');
-    //   }
-    // });
-
-    // Function to Populate Printer Info (Optional)
-    function populatePrinterInfo() {
-      // Placeholder: Implement actual printer retrieval logic if needed
-      const printerData = {
-        name: "HP LaserJet Pro",
-        model: "M404dn",
-        brand: "HP",
-        default: true
-      };
-
-      // Ensure you have elements with these IDs or adjust accordingly
-      // For example:
-      // <p id="printerName"></p>
-      // <p id="printerModel"></p>
-      /*
-      document.getElementById('printerName').textContent = `Name: ${printerData.name}`;
-      document.getElementById('printerModel').textContent = `Model: ${printerData.model}`;
-      document.getElementById('printerBrand').textContent = `Brand: ${printerData.brand}`;
-      document.getElementById('printerDefault').textContent = `Default: ${printerData.default ? 'Yes' : 'No'}`;
-      */
-    }
-
-    // Call function to populate printer info on page load (Optional)
-    // window.onload = populatePrinterInfo;
-
+  <script type="text/javascript">
     $(".show-menu").mouseover(function () {
       $(this).addClass("invisible");
       $(".show-menu span").addClass("invisible");

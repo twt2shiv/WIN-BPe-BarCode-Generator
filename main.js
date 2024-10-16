@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 
 let mainWindow;
@@ -11,7 +12,7 @@ function createWindow() {
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true, 
+      nodeIntegration: true,
       contextIsolation: false
     }
   });
@@ -31,8 +32,55 @@ function createWindow() {
   });
 }
 
+// Send printer information to the renderer process
+ipcMain.on('get-printer-info', async (event) => {
+  try {
+    const printers = await mainWindow.webContents.getPrintersAsync();
+    event.sender.send('printer-info', printers);
+  } catch (error) {
+    console.error('Failed to retrieve printers:', error);
+    event.sender.send('printer-info-error', 'Failed to retrieve printers.');
+  }
+});
+
+ipcMain.on('get-app-version', (event) => {
+  const appVersion = app.getVersion();
+  event.reply('send-app-version', appVersion);
+});
+// Auto updater events
+autoUpdater.on('update-available', () => {
+  dialog.showMessageBox(mainWindow, {
+    type: 'info',
+    buttons: ['OK'],
+    title: 'Update Available',
+    message: 'A new version is available. Downloading now...'
+  });
+});
+
+autoUpdater.on('update-downloaded', () => {
+  dialog.showMessageBox(mainWindow, {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Update Ready',
+    message: 'Update has been downloaded. It will be installed on restart.'
+  }).then((result) => {
+    if (result.response === 0) { // If 'Restart' button is clicked
+      autoUpdater.quitAndInstall(); // Restart and install the update
+    }
+  });
+});
+
+// Check for updates on app start
 app.whenReady().then(() => {
   createWindow();
+
+  // Check for updates immediately
+  autoUpdater.checkForUpdates();
+
+  // Periodic check for updates (optional)
+  setInterval(() => {
+    autoUpdater.checkForUpdates();
+  }, 60000); // Check every minute
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -49,7 +97,7 @@ ipcMain.on('print-label', (event, labelContent) => {
     height: 600,
     show: false, // Hide the window
     webPreferences: {
-      nodeIntegration: true, // For simplicity; consider security implications
+      nodeIntegration: true,
       contextIsolation: false
     }
   });
@@ -75,11 +123,9 @@ ipcMain.on('print-label', (event, labelContent) => {
     }, (success, errorType) => {
       if (!success) {
         console.error('Failed to print:', errorType);
-        // Optionally, notify the renderer of the failure
         event.reply('print-result', { success: false, error: errorType });
       } else {
         console.log('Print job sent successfully.');
-        // Optionally, notify the renderer of the success
         event.reply('print-result', { success: true });
       }
       printWindow.close();
