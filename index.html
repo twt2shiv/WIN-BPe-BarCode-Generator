@@ -223,7 +223,7 @@
     <div class="viewport">
       <br><br>
       <h5>Generate Label (IMEI/ SN)</h5>
-      <input type="text" id="inputNumber" placeholder="XXXXX-XXXXX-XXXXX" value="864946060293114" readonly>
+      <input type="text" id="inputNumber" placeholder="XXXXX-XXXXX-XXXXX" value="89918560400342100000" readonly>
       <button id="generateBtn">Find</button>
       <button id="printBtn" disabled>Print</button>
       <div id="loader" style="display: none; position: fixed; top: 40%; left: 30%; transform: translate(-50%, -50%);">
@@ -249,6 +249,38 @@
       $(".show-menu").removeClass("invisible");
       $(".show-menu span").removeClass("invisible");
     });
+
+    // Directly print the label
+    function printLabel() {
+      const divElement = document.querySelector('#barcodePreview > div');
+      
+      html2canvas(divElement).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png'); // Get the image data
+        
+        // Create a new image element
+        const img = new Image();
+        img.src = imgData;
+
+        // Wait for the image to load, then print
+        img.onload = () => {
+          // Create a new window to print
+          const printWindow = window.open('', '_blank');
+          printWindow.document.write('<html><head><title>Print</title></head><body>');
+          printWindow.document.write(`<img src="${imgData}" style="width: 100%; height: auto;"/>`);
+          printWindow.document.write('</body></html>');
+          printWindow.document.close(); // Close the document
+
+          // Wait for the window to load before printing
+          printWindow.onload = () => {
+            printWindow.print();
+            printWindow.close(); // Close the print window after printing
+          };
+        };
+      });
+    }
+
+    // Add event listener for print button
+    document.getElementById('printBtn').addEventListener('click', printLabel);
   </script>
 </body>
 
