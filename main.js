@@ -123,6 +123,12 @@ autoUpdater.on('error', (error) => {
   dialog.showErrorBox('Update Error', `An error occurred while checking for updates: ${error.message}`);
 });
 
+ipcMain.handle('get-output-path', () => {
+  // Get the userData directory or any other path you want to use
+  const outputDir = path.join(app.getPath('userData'), 'output');
+  return outputDir; // Return the path to the renderer process
+});
+
 app.whenReady().then(() => {
   createWindow();
   autoUpdater.checkForUpdates();

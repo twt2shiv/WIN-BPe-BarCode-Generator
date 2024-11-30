@@ -105,11 +105,34 @@ function createLabelHTML(barcodeDataURL, product) {
 }
 
 // Function to save label and trigger print
-function downloadLabel(serialNo, labelHTML) {
-  const outputDir = path.join(__dirname, 'output');
-  const filePath = path.join(outputDir, `${serialNo}_label.html`);
+// function downloadLabel(serialNo, labelHTML) {
+//   const outputDir = path.join(__dirname, 'output');
+//   const filePath = path.join(outputDir, `${serialNo}_label.html`);
+//   console.log("==============", filePath);
+//   try {
+//     // Ensure the output directory exists
+//     if (!fs.existsSync(outputDir)) {
+//       fs.mkdirSync(outputDir, { recursive: true });
+//     }
 
+//     // Write the HTML file
+//     fs.writeFileSync(filePath, labelHTML);
+//     ipcRenderer.send('show-info', `File created successfully at ${filePath}`);
+
+//     // Automatically print the generated file
+//     printGeneratedFile(filePath);
+//   } catch (err) {
+//     console.error('Error saving HTML file:', err);
+//     ipcRenderer.send('show-error', 'Error saving HTML file: ' + err.message);
+//   }
+// }
+async function downloadLabel(serialNo, labelHTML) {
   try {
+    // Request the output path from the main process
+    const outputDir = await ipcRenderer.invoke('get-output-path');
+    const filePath = path.join(outputDir, `${serialNo}_label.html`);
+    console.log("==============", filePath);
+
     // Ensure the output directory exists
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
@@ -121,6 +144,7 @@ function downloadLabel(serialNo, labelHTML) {
 
     // Automatically print the generated file
     printGeneratedFile(filePath);
+    inputNumber.value = '';
   } catch (err) {
     console.error('Error saving HTML file:', err);
     ipcRenderer.send('show-error', 'Error saving HTML file: ' + err.message);
