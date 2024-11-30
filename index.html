@@ -37,9 +37,12 @@
 
 <body>
   <div class="main">
-    <h5>Generate Label (IMEI/ SN)</h5>
-    <input type="text" id="inputNumber" placeholder="XXXXX-XXXXX-XXXXX" value="00070407336" readonly>
-    <button id="generateBtn">Generate</button>
+    <h5>Generate Sticker (Enter IMEI)</h5>
+    <form method="GET">
+      <input type="text" id="inputNumber" placeholder="XXXXX-XXXXX-XXXXX">
+      <input type="submit" id="generateBtn" value="Generate" hidden>
+    </form>
+
     <div id="loader">
       <img src="https://iili.io/2JSdpkP.gif" alt="Loading...">
     </div>

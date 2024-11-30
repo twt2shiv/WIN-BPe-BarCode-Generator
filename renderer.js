@@ -80,6 +80,7 @@ async function fetchProductData(number) {
   if (data.success) {
     return data.data[0];
   } else {
+    inputNumber.value = '';
     ipcRenderer.send('show-error', data.message);
     return null;
   }
