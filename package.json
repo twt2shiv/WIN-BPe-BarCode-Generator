@@ -24,15 +24,14 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "twt2shiv",
-        "repo": "WIN-BPe-BarCode-Generator",
-        "private": true
-      }
-    ]
+    "publish": {
+      "provider": "github",
+      "owner": "twt2shiv",
+      "repo": "WIN-BPe-BarCode-Generator",
+      "releaseType": "release"
+    }
   },
+  "repository": "https://github.com/twt2shiv/WIN-BPe-BarCode-Generator.git",
   "keywords": [],
   "author": "",
   "license": "ISC",
