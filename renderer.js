@@ -35,6 +35,7 @@ async function generateBarcode(number) {
       // Save the label and print
       downloadLabel(serialNo, labelHTML);
     } else {
+      console.error('Failed to fetch product data.');
       ipcRenderer.send('show-error', 'Failed to fetch product data.');
     }
   } catch (error) {
@@ -80,6 +81,7 @@ async function fetchProductData(number) {
   if (data.success) {
     return data.data[0];
   } else {
+    console.error("==========", data.message);
     inputNumber.value = '';
     ipcRenderer.send('show-error', data.message);
     return null;
@@ -104,23 +106,27 @@ function createLabelHTML(barcodeDataURL, product) {
 
 // Function to save label and trigger print
 function downloadLabel(serialNo, labelHTML) {
-  const filePath = path.join(__dirname, 'output', `${serialNo}_label.html`);
+  const outputDir = path.join(__dirname, 'output');
+  const filePath = path.join(outputDir, `${serialNo}_label.html`);
 
-  if (!fs.existsSync(path.dirname(filePath))) {
-    fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  }
-
-  fs.writeFile(filePath, labelHTML, (err) => {
-    if (err) {
-      ipcRenderer.send('show-error', 'Error saving HTML file: ' + err.message);
-    } else {
-      ipcRenderer.send('show-info', `File created successfully at ${filePath}`);
-
-      // Automatically print the generated file
-      printGeneratedFile(filePath);
+  try {
+    // Ensure the output directory exists
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
     }
-  });
+
+    // Write the HTML file
+    fs.writeFileSync(filePath, labelHTML);
+    ipcRenderer.send('show-info', `File created successfully at ${filePath}`);
+
+    // Automatically print the generated file
+    printGeneratedFile(filePath);
+  } catch (err) {
+    console.error('Error saving HTML file:', err);
+    ipcRenderer.send('show-error', 'Error saving HTML file: ' + err.message);
+  }
 }
+
 
 // Function to print the generated file
 function printGeneratedFile(filePath) {

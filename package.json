@@ -1,6 +1,6 @@
 {
   "name": "my-electron-app",
-  "version": "0.3",
+  "version": "1.0.3",
   "description": "A basic Electron.js application",
   "main": "main.js",
   "scripts": {
@@ -23,7 +23,15 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "twt2shiv",
+        "repo": "WIN-BPe-BarCode-Generator",
+        "private": true
+      }
+    ]
   },
   "keywords": [],
   "author": "",

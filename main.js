@@ -20,20 +20,19 @@ function createWindow() {
 
   mainWindow.loadFile('index.html');
 
-  mainWindow.on('close', (event) => {
-    const response = dialog.showMessageBoxSync(mainWindow, {
+  mainWindow.on('close', async (event) => {
+    const response = await dialog.showMessageBox(mainWindow, {
       type: 'question',
       buttons: ['Cancel', 'OK'],
       title: 'Confirm',
       message: 'Are you sure you want to close the application?',
     });
-    if (response === 0) {
-      event.preventDefault(); // Prevent the window from closing
+    if (response.response === 0) {
+      event.preventDefault();
     }
   });
 }
 
-// Send printer information to the renderer process
 ipcMain.on('get-printer-info', async (event) => {
   try {
     const printers = await mainWindow.webContents.getPrintersAsync();
@@ -44,74 +43,57 @@ ipcMain.on('get-printer-info', async (event) => {
   }
 });
 
-// Send app version to the renderer process
 ipcMain.on('get-app-version', (event) => {
-  const appVersion = app.getVersion();
-  event.reply('send-app-version', appVersion);
+  event.reply('send-app-version', app.getVersion());
 });
 
-// Handle Print Request
 ipcMain.on('print-file', (event, filePath) => {
   if (!fs.existsSync(filePath)) {
     dialog.showErrorBox('File Not Found', `The file at ${filePath} does not exist.`);
     return;
   }
 
+  const tempDir = path.join(app.getPath('userData'), 'temp');
+  if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true });
+  }
+  const tempFilePath = path.join(tempDir, path.basename(filePath));
+  fs.copyFileSync(filePath, tempFilePath);
+
   const printWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    show: true, // Show the window to enable preview
+    show: true,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
     },
   });
 
-  printWindow.loadFile(filePath);
+  printWindow.loadFile(tempFilePath);
 
-  printWindow.webContents.on('did-finish-load', () => {
-    printWindow.webContents.print(
-      {
-        silent: false, // Set to false to show print preview dialog
-        printBackground: true,
-      },
-      (success, errorType) => {
-        if (!success) {
-          console.error('Print failed:', errorType);
-          event.reply('print-result', { success: false, error: errorType });
-        } else {
-          console.log('Print job sent successfully.');
-          event.reply('print-result', { success: true });
-        }
-        // Automatically close the preview window after printing
-        printWindow.close();
+  printWindow.webContents.once('did-finish-load', () => {
+    printWindow.webContents.print({ silent: false, printBackground: true }, (success, errorType) => {
+      if (!success) {
+        console.error('Print failed:', errorType);
+        event.reply('print-result', { success: false, error: errorType });
+      } else {
+        console.log('Print job sent successfully.');
+        event.reply('print-result', { success: true });
       }
-    );
+      printWindow.close();
+    });
   });
 });
 
-
-// Handle Show Error Dialog
 ipcMain.on('show-error', (event, message) => {
-  dialog.showMessageBox(mainWindow, {
-    type: 'error',
-    buttons: ['OK'],
-    title: 'Error',
-    message: message,
-  });
+  dialog.showMessageBox(mainWindow, { type: 'error', buttons: ['OK'], title: 'Error', message });
 });
 
-// Handle Show Success Dialog
 ipcMain.on('show-success', (event, message) => {
-  dialog.showMessageBox(mainWindow, {
-    type: 'info',
-    buttons: ['OK'],
-    title: 'Success',
-    message: message,
-  });
+  dialog.showMessageBox(mainWindow, { type: 'info', buttons: ['OK'], title: 'Success', message });
 });
 
-// Auto-updater events
 autoUpdater.on('update-available', () => {
   dialog.showMessageBox(mainWindow, {
     type: 'info',
@@ -136,17 +118,15 @@ autoUpdater.on('update-downloaded', () => {
     });
 });
 
-// App lifecycle events
+autoUpdater.on('error', (error) => {
+  console.error('Auto-updater error:', error);
+  dialog.showErrorBox('Update Error', `An error occurred while checking for updates: ${error.message}`);
+});
+
 app.whenReady().then(() => {
   createWindow();
-
-  // Check for updates immediately
   autoUpdater.checkForUpdates();
-
-  // Periodic check for updates (optional)
-  setInterval(() => {
-    autoUpdater.checkForUpdates();
-  }, 60000); // Check every minute
+  setInterval(() => autoUpdater.checkForUpdates(), 2 * 60 * 60 * 1000);
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -154,5 +134,3 @@ app.whenReady().then(() => {
     }
   });
 });
-
-
