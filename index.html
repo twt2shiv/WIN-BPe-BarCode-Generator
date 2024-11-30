@@ -5,283 +5,47 @@
   <meta charset="UTF-8">
   <title>BharatPe - Barcode Generator</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-    }
-
     body {
+      padding: 15px;
+      margin: 0;
       font-family: Calibri, Helvetica;
-      overflow: hidden;
     }
 
-    a,
-    a:link,
-    a:visited,
-    a:active {
-      color: #2980b9;
-    }
-
-    a:hover {
-      background-color: #2980b9;
-      color: #fff;
-    }
-
-    div.show-menu {
-      position: absolute;
-      width: 80px;
-      height: 100%;
-      z-index: 1;
-      background: rgb(198 198 198 / 37%);
-    }
-
-    div.show-menu span {
-      position: absolute;
-      top: 45%;
-      left: 30%;
-      font-size: 60px;
-      font-weight: bold;
-      color: #2055a4;
-      text-shadow: 0 -1px 0 #888;
-    }
-
-    .invisible {
-      transition: all 200ms cubic-bezier(0.77, 0, 0.175, 1);
-      -webkit-transition: all 200ms cubic-bezier(0.77, 0, 0.175, 1);
-    }
-
-    div.invisible {
-      background: rgba(0, 0, 0, 0);
-    }
-
-    span.invisible {
-      opacity: 0;
-    }
-
-    /* navigation menu */
-    nav {
-      position: relative;
-      width: 160px;
-      height: 100%;
-      padding: 25px;
-      color: white;
-      transform: translate(-190px);
-      -ms-transform: translate(-190px);
-      -webkit-transform: translate(-190px);
-    }
-
-    nav,
-    nav.slide {
-      transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-      -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-    }
-
-    nav.slide {
-      transform: translate(10px);
-      -ms-transform: translate(10px);
-      -webkit-transform: translate(10px);
-    }
-
-    nav img {
-      width: 100px;
-      margin-bottom: 25px;
-    }
-
-    nav ul {
-      list-style-type: none;
-      margin-bottom: 20px;
-      padding-top: 15px;
-      border-top: 1px dotted #999;
-      text-transform: uppercase;
-    }
-
-    nav li {
-      font-size: 14px;
-      color: #fff;
-    }
-
-    nav li h4 {
-      margin-bottom: 5px;
-      font-size: 17px;
-      color: white;
-    }
-
-    /* main stage and moving viewport */
-    div.main {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-color: #2055a4;
-      perspective: 1000px;
-      -moz-perspective: 1000px;
-      -webkit-perspective: 1000px;
-      perspective-origin: 50% 50%;
-      -moz-perspective-origin: 50% 50%;
-      -webkit-perspective-origin: 50% 50%;
-    }
-
-    div.viewport {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      padding-left: 100px;
-      background-color: #f5f5f5;
-      transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-      -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-    }
-
-    div.viewport>h3 {
-      margin-bottom: 30px;
-      font-family: Oswald;
-      font-size: 4em;
-      color: #e74c3c;
-    }
-
-    div.viewport>p {
-      margin-bottom: 40px;
-    }
-
-    div.viewport>p span {
-      font-family: Lora;
-      font-size: 2em;
-      color: #000;
-    }
-
-    div.moveit {
-      transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-      -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-      transform: rotateY(-20deg) translateZ(0px) translateX(300px);
-      -ms-transform: rotateY(-20deg) translateZ(0px) translateX(300px);
-      -webkit-transform: rotateY(-20deg) translateZ(0px) translateX(300px);
-    }
-
-    input[type=text] {
+    input[type="text"] {
       padding: 6px;
       margin-right: 10px;
-      background-color: #fff;
       border-radius: 2px;
       width: 250px;
       border: 1px solid #ccc;
-      border-top: 1px solid #8e8f8f;
-      letter-spacing: 2px;
       font-weight: 550;
-    }
-
-    input[type=text]:focus {
-      border-color: #bee6fd;
-      border-top-color: #98d1ef;
-      outline: none;
-      color: #fff;
-      background-color: #2055a4;
     }
 
     button {
       padding: 6px;
-      background: linear-gradient(to bottom, #f2f2f2 45%, #ebebeb 45%, #cfcfcf);
-      border-color: #8e8f8f;
       border-radius: 3px;
-      box-shadow: inset 0 0 0 1px #fffc;
-      box-sizing: border-box;
     }
 
-    /* #barcodePreview {
-      
-      justify-content: center;
-      align-items: center;
-      overflow: visible;
-      position: relative;
-    } */
+    #loader {
+      display: none;
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   </style>
 </head>
 
-<body translate="no">
-  <link href="https://fonts.googleapis.com/css?family=Oswald:700" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet" type="text/css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
-  <div class="show-menu">
-    <span>»</span>
-    <nav>
-      <img src="https://iili.io/2dH9WzP.png" style="width: 64px; height: 64px;">
-      <ul>
-        <li>
-          <h4>Printer Info</h4>
-        </li>
-        <li id="printerName">Name: N/A</li>
-        <li id="printerDefault">Default: No</li>
-      </ul>
-      <ul>
-        <li>
-          <h4>Version</h4>
-        </li>
-        <li id="appVersion">v0.1</li>
-      </ul>
-    </nav>
-  </div>
-
+<body>
   <div class="main">
-    <div class="viewport">
-      <br><br>
-      <h5>Generate Label (IMEI/ SN)</h5>
-      <input type="text" id="inputNumber" placeholder="XXXXX-XXXXX-XXXXX" value="89918560400342100000" readonly>
-      <button id="generateBtn">Find</button>
-      <button id="printBtn" disabled>Print</button>
-      <div id="loader" style="display: none; position: fixed; top: 40%; left: 30%; transform: translate(-50%, -50%);">
-        <img src="https://iili.io/2JSdpkP.gif" alt="Loading...">
-      </div>
-      <div id="barcodePreview" style="position: relative;"></div>
+    <h5>Generate Label (IMEI/ SN)</h5>
+    <input type="text" id="inputNumber" placeholder="XXXXX-XXXXX-XXXXX" value="00070407336" readonly>
+    <button id="generateBtn">Generate</button>
+    <div id="loader">
+      <img src="https://iili.io/2JSdpkP.gif" alt="Loading...">
     </div>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
+
   <script src="renderer.js"></script>
-  <script type="text/javascript">
-    $(".show-menu").mouseover(function () {
-      $(this).addClass("invisible");
-      $(".show-menu span").addClass("invisible");
-      $("nav").addClass("slide");
-      $(".viewport").addClass("moveit");
-    });
-
-    $(".main").mouseover(function (e) {
-      $(this).removeClass("invisible");
-      $(".viewport").removeClass("moveit");
-      $("nav").removeClass("slide");
-      $(".show-menu").removeClass("invisible");
-      $(".show-menu span").removeClass("invisible");
-    });
-
-    // Directly print the label
-    function printLabel() {
-      const divElement = document.querySelector('#barcodePreview > div');
-      
-      html2canvas(divElement).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png'); // Get the image data
-        
-        // Create a new image element
-        const img = new Image();
-        img.src = imgData;
-
-        // Wait for the image to load, then print
-        img.onload = () => {
-          // Create a new window to print
-          const printWindow = window.open('', '_blank');
-          printWindow.document.write('<html><head><title>Print</title></head><body>');
-          printWindow.document.write(`<img src="${imgData}" style="width: 100%; height: auto;"/>`);
-          printWindow.document.write('</body></html>');
-          printWindow.document.close(); // Close the document
-
-          // Wait for the window to load before printing
-          printWindow.onload = () => {
-            printWindow.print();
-            printWindow.close(); // Close the print window after printing
-          };
-        };
-      });
-    }
-
-    // Add event listener for print button
-    document.getElementById('printBtn').addEventListener('click', printLabel);
-  </script>
 </body>
 
 </html>

@@ -2,8 +2,6 @@ const JsBarcode = require('jsbarcode');
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
 const path = require('path');
-const html2canvas = require('html2canvas');
-const { jsPDF } = require('jspdf');
 
 // Generate Barcode on Button Click
 document.getElementById('generateBtn').addEventListener('click', async () => {
@@ -26,15 +24,23 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
 async function generateBarcode(number) {
   toggleLoader(true);
 
-  const barcodeDataURL = createBarcode(number);
+  try {
+    const product = await fetchProductData(number);
+    if (product) {
+      const serialNo = product.serialNo; // Use the serialNo from the API response
+      const barcodeDataURL = createBarcode(serialNo); // Generate barcode using serialNo
 
-  const product = await fetchProductData(number);
-  if (product) {
-    const labelHTML = createLabelHTML(barcodeDataURL, product);
-    document.getElementById('barcodePreview').innerHTML = labelHTML;
+      const labelHTML = createLabelHTML(barcodeDataURL, product);
 
-    // Allow user to download the label
-    downloadLabel(number);
+      // Save the label and print
+      downloadLabel(serialNo, labelHTML);
+    } else {
+      ipcRenderer.send('show-error', 'Failed to fetch product data.');
+    }
+  } catch (error) {
+    ipcRenderer.send('show-error', 'Error generating barcode: ' + error.message);
+  } finally {
+    toggleLoader(false);
   }
 }
 
@@ -42,30 +48,33 @@ async function generateBarcode(number) {
 function createBarcode(number) {
   const canvas = document.createElement('canvas');
 
+  // Generate the barcode on the original canvas
   JsBarcode(canvas, number, {
     format: 'CODE128',
-    width: 1,
-    height: 10,
+    width: 2, // Set a larger width for better resolution
+    height: 40, // Set a larger height for better resolution
     displayValue: false,
-    margin: 0
+    margin: 0,
   });
 
+  // Resize the barcode for consistent display
   const desiredWidth = 120;
-  const desiredHeight = 10;
+  const desiredHeight = 40;
   const resizedCanvas = document.createElement('canvas');
   resizedCanvas.width = desiredWidth;
   resizedCanvas.height = desiredHeight;
 
   const ctx = resizedCanvas.getContext('2d');
-  ctx.drawImage(canvas, 0, 0, desiredWidth, desiredHeight);
+  ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, desiredWidth, desiredHeight);
 
   return resizedCanvas.toDataURL();
 }
 
 // Function to fetch product data
 async function fetchProductData(number) {
-  // const response = await fetch(`https://api-bpe.mscapi.live/win/fetch/${number}`);
-  const response = await fetch(`http://localhost:3005/win/QR/fetch/${number}`); // dev
+  // const response = await fetch(`http://localhost:3005/win/QR/fetch/${number}`); // Dev
+  const response = await fetch(`https://api-bpe.mscapi.live/win/QR/fetch/${number}`); // Dev
+
   const data = await response.json();
 
   if (data.success) {
@@ -92,63 +101,38 @@ function createLabelHTML(barcodeDataURL, product) {
     .replace('{madeBy}', product.madeBy);
 }
 
-// Function to download label as PNG
-function downloadLabel(labelHTML) {
-  const divElement = document.querySelector('#barcodePreview');
+// Function to save label and trigger print
+function downloadLabel(serialNo, labelHTML) {
+  const filePath = path.join(__dirname, 'output', `${serialNo}_label.html`);
 
-  if (divElement) {
-    const htmlContent = divElement.outerHTML;
-
-    const filePath = path.join(__dirname, 'output', `${labelHTML}_label.html`);
-
-    if (!fs.existsSync(path.dirname(filePath))) {
-      fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    }
-
-    fs.writeFile(filePath, htmlContent, (err) => {
-      if (err) {
-        ipcRenderer.send('show-error', 'Error saving HTML file: ' + err.message);
-      } else {
-        ipcRenderer.send('show-info', `file created successfully at ${filePath}`);
-      }
-    });
-  } else {
-    ipcRenderer.send('show-error', 'No content found to save as HTML.');
+  if (!fs.existsSync(path.dirname(filePath))) {
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
   }
+
+  fs.writeFile(filePath, labelHTML, (err) => {
+    if (err) {
+      ipcRenderer.send('show-error', 'Error saving HTML file: ' + err.message);
+    } else {
+      ipcRenderer.send('show-info', `File created successfully at ${filePath}`);
+
+      // Automatically print the generated file
+      printGeneratedFile(filePath);
+    }
+  });
 }
 
-
+// Function to print the generated file
+function printGeneratedFile(filePath) {
+  ipcRenderer.send('print-file', filePath);
+}
 
 // Function to toggle loader visibility
 function toggleLoader(isLoading) {
   document.getElementById('loader').style.display = isLoading ? 'block' : 'none';
   document.getElementById('generateBtn').disabled = isLoading;
-  document.getElementById('printBtn').disabled = isLoading;
 }
-
-// Show printer information
-function showPrinterInfo(printers) {
-  if (printers && printers.length > 0) {
-    const defaultPrinter = printers.find(printer => printer.isDefault) || printers[0];
-    document.getElementById('printerName').innerHTML = `<strong>Name: </strong> ${defaultPrinter.name || 'N/A'}`;
-    document.getElementById('printerDefault').innerHTML = `<strong>Default: </strong> ${defaultPrinter.isDefault ? 'Yes' : 'No'}`;
-  } else {
-    ipcRenderer.send('show-error', 'No printers found.');
-  }
-}
-
-// Handle Printer Information from Main Process
-ipcRenderer.on('printer-info', (event, printers) => {
-  showPrinterInfo(printers);
-});
-
-// Update the version in the HTML when the version is received
-ipcRenderer.on('send-app-version', (event, version) => {
-  document.getElementById('appVersion').innerHTML = `v${version}`;
-});
 
 // Initial setup on window load
 window.onload = () => {
-  ipcRenderer.send('get-printer-info');
   ipcRenderer.send('get-app-version');
 };

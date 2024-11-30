@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
+const fs = require('fs');
 
 let mainWindow;
 
@@ -13,8 +14,8 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
-      contextIsolation: false
-    }
+      contextIsolation: false,
+    },
   });
 
   mainWindow.loadFile('index.html');
@@ -24,7 +25,7 @@ function createWindow() {
       type: 'question',
       buttons: ['Cancel', 'OK'],
       title: 'Confirm',
-      message: 'Are you sure you want to close the application?'
+      message: 'Are you sure you want to close the application?',
     });
     if (response === 0) {
       event.preventDefault(); // Prevent the window from closing
@@ -43,34 +44,99 @@ ipcMain.on('get-printer-info', async (event) => {
   }
 });
 
+// Send app version to the renderer process
 ipcMain.on('get-app-version', (event) => {
   const appVersion = app.getVersion();
   event.reply('send-app-version', appVersion);
 });
-// Auto updater events
+
+// Handle Print Request
+ipcMain.on('print-file', (event, filePath) => {
+  if (!fs.existsSync(filePath)) {
+    dialog.showErrorBox('File Not Found', `The file at ${filePath} does not exist.`);
+    return;
+  }
+
+  const printWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    show: true, // Show the window to enable preview
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+
+  printWindow.loadFile(filePath);
+
+  printWindow.webContents.on('did-finish-load', () => {
+    printWindow.webContents.print(
+      {
+        silent: false, // Set to false to show print preview dialog
+        printBackground: true,
+      },
+      (success, errorType) => {
+        if (!success) {
+          console.error('Print failed:', errorType);
+          event.reply('print-result', { success: false, error: errorType });
+        } else {
+          console.log('Print job sent successfully.');
+          event.reply('print-result', { success: true });
+        }
+        // Automatically close the preview window after printing
+        printWindow.close();
+      }
+    );
+  });
+});
+
+
+// Handle Show Error Dialog
+ipcMain.on('show-error', (event, message) => {
+  dialog.showMessageBox(mainWindow, {
+    type: 'error',
+    buttons: ['OK'],
+    title: 'Error',
+    message: message,
+  });
+});
+
+// Handle Show Success Dialog
+ipcMain.on('show-success', (event, message) => {
+  dialog.showMessageBox(mainWindow, {
+    type: 'info',
+    buttons: ['OK'],
+    title: 'Success',
+    message: message,
+  });
+});
+
+// Auto-updater events
 autoUpdater.on('update-available', () => {
   dialog.showMessageBox(mainWindow, {
     type: 'info',
     buttons: ['OK'],
     title: 'Update Available',
-    message: 'A new version is available. Downloading now...'
+    message: 'A new version is available. Downloading now...',
   });
 });
 
 autoUpdater.on('update-downloaded', () => {
-  dialog.showMessageBox(mainWindow, {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Update Ready',
-    message: 'Update has been downloaded. It will be installed on restart.'
-  }).then((result) => {
-    if (result.response === 0) { // If 'Restart' button is clicked
-      autoUpdater.quitAndInstall(); // Restart and install the update
-    }
-  });
+  dialog
+    .showMessageBox(mainWindow, {
+      type: 'info',
+      buttons: ['Restart', 'Later'],
+      title: 'Update Ready',
+      message: 'Update has been downloaded. It will be installed on restart.',
+    })
+    .then((result) => {
+      if (result.response === 0) {
+        autoUpdater.quitAndInstall();
+      }
+    });
 });
 
-// Check for updates on app start
+// App lifecycle events
 app.whenReady().then(() => {
   createWindow();
 
@@ -89,66 +155,4 @@ app.whenReady().then(() => {
   });
 });
 
-// Handle Print Request from Renderer
-ipcMain.on('print-label', (event, labelContent) => {
-  // Create a hidden window to print the label
-  let printWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    show: false, // Hide the window
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    }
-  });
 
-  // Load a blank HTML with the label content
-  printWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(`
-    <html>
-      <head>
-        <title>Print Label</title>
-        <link rel="stylesheet" href="file://${path.join(__dirname, 'assets', 'styles.css')}">
-      </head>
-      <body>
-        ${labelContent}
-      </body>
-    </html>
-  `));
-
-  // Once the content is loaded, initiate printing
-  printWindow.webContents.on('did-finish-load', () => {
-    printWindow.webContents.print({
-      silent: false, // Set to true for silent printing
-      printBackground: true
-    }, (success, errorType) => {
-      if (!success) {
-        console.error('Failed to print:', errorType);
-        event.reply('print-result', { success: false, error: errorType });
-      } else {
-        console.log('Print job sent successfully.');
-        event.reply('print-result', { success: true });
-      }
-      printWindow.close();
-    });
-  });
-});
-
-// Handle Show Error Dialog
-ipcMain.on('show-error', (event, message) => {
-  dialog.showMessageBox(mainWindow, {
-    type: 'error',
-    buttons: ['OK'],
-    title: 'Error',
-    message: message
-  });
-});
-
-// Handle Show Success Dialog
-ipcMain.on('show-success', (event, message) => {
-  dialog.showMessageBox(mainWindow, {
-    type: 'info',
-    buttons: ['OK'],
-    title: 'Success',
-    message: message
-  });
-});
