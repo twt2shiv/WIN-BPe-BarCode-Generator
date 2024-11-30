@@ -5,34 +5,26 @@ const fs = require('fs');
 
 let mainWindow;
 
+// Function to create a new window
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 760,
     height: 500,
     resizable: false,
     autoHideMenuBar: true,
+    frame: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload: path.join(__dirname, 'preload.js'), // Ensure the preload script path is correct
+      nodeIntegration: false,  // Security: Avoid enabling nodeIntegration
+      contextIsolation: true,  // Security: Enable context isolation
     },
   });
 
-  mainWindow.loadFile('index.html');
-
-  mainWindow.on('close', async (event) => {
-    const response = await dialog.showMessageBox(mainWindow, {
-      type: 'question',
-      buttons: ['Cancel', 'OK'],
-      title: 'Confirm',
-      message: 'Are you sure you want to close the application?',
-    });
-    if (response.response === 0) {
-      event.preventDefault();
-    }
-  });
+  // Load the dashboard page
+  mainWindow.loadFile('./pages/dashboard.html');
 }
 
+// Handle request to get printer information
 ipcMain.on('get-printer-info', async (event) => {
   try {
     const printers = await mainWindow.webContents.getPrintersAsync();
@@ -43,10 +35,12 @@ ipcMain.on('get-printer-info', async (event) => {
   }
 });
 
+// Handle request to get app version
 ipcMain.on('get-app-version', (event) => {
   event.reply('send-app-version', app.getVersion());
 });
 
+// Handle print file request
 ipcMain.on('print-file', (event, filePath) => {
   if (!fs.existsSync(filePath)) {
     dialog.showErrorBox('File Not Found', `The file at ${filePath} does not exist.`);
@@ -57,6 +51,7 @@ ipcMain.on('print-file', (event, filePath) => {
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir, { recursive: true });
   }
+
   const tempFilePath = path.join(tempDir, path.basename(filePath));
   fs.copyFileSync(filePath, tempFilePath);
 
@@ -86,14 +81,17 @@ ipcMain.on('print-file', (event, filePath) => {
   });
 });
 
+// Show error message dialog
 ipcMain.on('show-error', (event, message) => {
   dialog.showMessageBox(mainWindow, { type: 'error', buttons: ['OK'], title: 'Error', message });
 });
 
+// Show success message dialog
 ipcMain.on('show-success', (event, message) => {
   dialog.showMessageBox(mainWindow, { type: 'info', buttons: ['OK'], title: 'Success', message });
 });
 
+// Auto update events
 autoUpdater.on('update-available', () => {
   dialog.showMessageBox(mainWindow, {
     type: 'info',
@@ -123,17 +121,40 @@ autoUpdater.on('error', (error) => {
   dialog.showErrorBox('Update Error', `An error occurred while checking for updates: ${error.message}`);
 });
 
+// Get output path for the app
 ipcMain.handle('get-output-path', () => {
-  // Get the userData directory or any other path you want to use
   const outputDir = path.join(app.getPath('userData'), 'output');
   return outputDir; // Return the path to the renderer process
 });
 
+// Minimize window
+ipcMain.on('minimize-window', () => {
+  if (mainWindow) {
+    mainWindow.minimize();
+  }
+});
+
+// Handle window close with confirmation
+
+ipcMain.on('close-window', async () => {
+  const response = await dialog.showMessageBox(mainWindow, {
+    type: 'question',
+    buttons: ['Cancel', 'YES - Please Close'],
+    title: 'Confirm',
+    message: 'Are you sure? You want to close the application?\n',
+  });
+
+  if (response.response === 1) {
+    app.quit(); // Close the application if "OK" is selected
+  }
+});
+
+
+// Initialize app and create the main window
 app.whenReady().then(() => {
   createWindow();
   autoUpdater.checkForUpdates();
-  setInterval(() => autoUpdater.checkForUpdates(), 2 * 60 * 60 * 1000);
-
+  setInterval(() => autoUpdater.checkForUpdates(), 30 * 1000); // Check for updates every 30 seconds
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
