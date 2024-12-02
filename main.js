@@ -2,27 +2,68 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
-let mainWindow;
+let mainWindow; // Global variable for the main window
 
 // Function to create a new window
 function createWindow() {
+  if (mainWindow) {
+    return; // Prevent creating multiple windows
+  }
+
   mainWindow = new BrowserWindow({
     width: 760,
     height: 500,
     resizable: false,
     autoHideMenuBar: true,
     frame: false,
+    title: "Loading...",
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'), // Ensure the preload script path is correct
-      nodeIntegration: false,  // Security: Avoid enabling nodeIntegration
-      contextIsolation: true,  // Security: Enable context isolation
+      nodeIntegration: true,
+      contextIsolation: false,
     },
   });
 
-  // Load the dashboard page
   mainWindow.loadFile('./pages/dashboard.html');
+
+  // Handle window close
+  mainWindow.on('closed', () => {
+    mainWindow = null; // Clear the reference when the window is closed
+  });
 }
+
+// Function to get MAC and IP address
+function getNetworkInfo() {
+  const interfaces = os.networkInterfaces();
+  let macAddress = '';
+  let ipAddress = '';
+
+  // Iterate over all network interfaces and get the MAC and IP
+  for (const iface in interfaces) {
+    interfaces[iface].forEach((details) => {
+      if (details.family === 'IPv4' && !details.internal) {
+        ipAddress = details.address;
+      }
+      if (details.mac && !macAddress) {
+        macAddress = details.mac; // Get the MAC address
+      }
+    });
+  }
+  return { macAddress, ipAddress };
+}
+
+// Handle request for getting MAC and IP address
+ipcMain.handle('get-network-info', () => {
+  return getNetworkInfo();
+});
+
+// Handle the 'get-app-version' request
+ipcMain.handle('get-app-version', () => {
+  const packagePath = path.join(__dirname, 'package.json');
+  const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
+  return packageData.version;  // Return the version from package.json
+});
 
 // Handle request to get printer information
 ipcMain.on('get-printer-info', async (event) => {
@@ -42,19 +83,7 @@ ipcMain.on('get-app-version', (event) => {
 
 // Handle print file request
 ipcMain.on('print-file', (event, filePath) => {
-  if (!fs.existsSync(filePath)) {
-    dialog.showErrorBox('File Not Found', `The file at ${filePath} does not exist.`);
-    return;
-  }
-
-  const tempDir = path.join(app.getPath('userData'), 'temp');
-  if (!fs.existsSync(tempDir)) {
-    fs.mkdirSync(tempDir, { recursive: true });
-  }
-
-  const tempFilePath = path.join(tempDir, path.basename(filePath));
-  fs.copyFileSync(filePath, tempFilePath);
-
+  // Open the print file
   const printWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -65,7 +94,7 @@ ipcMain.on('print-file', (event, filePath) => {
     },
   });
 
-  printWindow.loadFile(tempFilePath);
+  printWindow.loadFile(filePath);
 
   printWindow.webContents.once('did-finish-load', () => {
     printWindow.webContents.print({ silent: false, printBackground: true }, (success, errorType) => {
@@ -80,6 +109,7 @@ ipcMain.on('print-file', (event, filePath) => {
     });
   });
 });
+
 
 // Show error message dialog
 ipcMain.on('show-error', (event, message) => {
@@ -135,7 +165,6 @@ ipcMain.on('minimize-window', () => {
 });
 
 // Handle window close with confirmation
-
 ipcMain.on('close-window', async () => {
   const response = await dialog.showMessageBox(mainWindow, {
     type: 'question',
@@ -149,15 +178,54 @@ ipcMain.on('close-window', async () => {
   }
 });
 
-
 // Initialize app and create the main window
 app.whenReady().then(() => {
   createWindow();
+
   autoUpdater.checkForUpdates();
   setInterval(() => autoUpdater.checkForUpdates(), 30 * 1000); // Check for updates every 30 seconds
+
   app.on('activate', () => {
+    // Open a new window only if no other windows are open
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
   });
 });
+
+// Quit when all windows are closed (except on macOS)
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
+
+// Ensure only one instance of the app runs
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit(); // Quit if another instance is already running
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+}
+
+
+// /pages
+//   dashboard.html
+//   sticker.html
+// /template
+// index.html
+// main.js
+// package.json
+// preload.js
+// assets/
+//   build/
+//   js/
+//     sticker.js
+// template/
+//     printLabel.html
+// Renderer.js

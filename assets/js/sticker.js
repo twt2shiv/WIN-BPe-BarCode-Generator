@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
-alert("hello");
+// Generate Barcode on Button Click
 document.getElementById('generateBtn').addEventListener('click', async () => {
     const number = document.getElementById('inputNumber').value.trim();
 
@@ -25,17 +25,19 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
 async function generateBarcode(number) {
     toggleLoader(true);
     try {
-        const product = await fetchProductData(number);
-        if (product) {
-            const serialNo = product.serialNo; // Use the serialNo from the API response
-            const barcodeDataURL = createBarcode(serialNo); // Generate barcode using serialNo
+        const productData = await fetchProductData(number);
 
-            const labelHTML = createLabelHTML(barcodeDataURL, product);
-
-            downloadLabel(serialNo, labelHTML);
-        } else {
-            return ipcRenderer.send('show-error', 'Failed to fetch Product Information');
+        if (!productData.success) {
+            return ipcRenderer.send('show-error', productData.message);
         }
+        const product = productData.data[0];
+        const serialNo = product.serialNo;
+        const barcodeDataURL = createBarcode(serialNo);
+
+        const labelHTML = createLabelHTML(barcodeDataURL, product);
+
+        downloadLabel(serialNo, labelHTML);
+        return;
     } catch (error) {
         console.error('an error occured while generating Sticker 11:', error);
         return ipcRenderer.send('show-error', 'an error occured while Generating Sticker');
@@ -75,20 +77,13 @@ async function fetchProductData(number) {
 
     const data = await response.json();
 
-    if (data.success) {
-        return data.data[0];
-    } else {
-        inputNumber.value = '';
-        ipcRenderer.send('show-error', data.message);
-        return null;
-    }
+    return data;
 }
 
 // Function to create label HTML from template
 function createLabelHTML(barcodeDataURL, product) {
-    const templatePath = path.join(__dirname, 'template', 'printLabel.html');
+    const templatePath = path.join(__dirname, './../template', 'printLabel.html');
     const template = fs.readFileSync(templatePath, 'utf-8');
-
     return template
         .replace('{barcode}', barcodeDataURL)
         .replace('{name}', product.name)

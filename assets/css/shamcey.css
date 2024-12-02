@@ -1,18 +1,3 @@
-/*!
- * Shamcey Responsive Dashboard Template
- * Version: 2.0.0
- * Author: ThemePixels (@themepixels)
- * URL: http://themepixels.me/shamcey
- *
-**/
-/* --------------------------------------------------- */
-/* ############### GOOGLE FONTS IMPORT ############### */
-/* --------------------------------------------------- */
-@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700");
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700");
-@import url("https://fonts.googleapis.com/css?family=Fira+Sans:100,200,300,400,500,600,700");
-@import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700");
-@import url("https://fonts.googleapis.com/css?family=Lato:300,400,700");
 /* --------------------------------------------------- */
 /* ############### BOOTSTRAP FRAMEWORK ############### */
 /* --------------------------------------------------- */
@@ -22,6 +7,74 @@
  * Copyright 2011-2017 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
+@charset "UTF-8";
+
+@font-face {
+  font-family: "MsCorpres EmberFont";
+  font-weight: 200;
+  src:
+    url(./../fonts/MsCamz/Dv1WQ5DdeMS5qP7.woff2) format("woff2"),
+    url(./../fonts/MsCamz/e0LnMbFWJC-TMQz.woff) format("woff");
+}
+
+@font-face {
+  font-family: "MsCorpres EmberFont";
+  font-weight: 200;
+  font-style: italic;
+  src:
+    url(./MsCamz/ozb5-CLHQWI6Soc.woff2) format("woff2"),
+    url(./MsCamz/twzZHebXjCHBb6v.woff) format("woff");
+}
+
+@font-face {
+  font-family: "MsCorpres EmberFont";
+  src:
+    url(./MsCamz/pDxWAF1pBB0dzGB.woff2) format("woff2"),
+    url(./MsCamz/kfKKBuoqcD$AUKL.woff) format("woff");
+}
+
+@font-face {
+  font-family: "MsCorpres EmberFont";
+  font-style: italic;
+  src:
+    url(./MsCamz/WOnTLzkiaEccV7F.woff2) format("woff2"),
+    url(./MsCamz/JJsp0ZvgpfwzJM6.woff) format("woff");
+}
+
+@font-face {
+  font-family: "MsCorpres EmberFont";
+  font-weight: 500;
+  src:
+    url(./MsCamz/VjTR4RqBzY0mUYx.woff2) format("woff2"),
+    url(./MsCamz/XIvhNCZAsrT80Wz.woff) format("woff");
+}
+
+@font-face {
+  font-family: "MsCorpres EmberFont";
+  font-weight: 500;
+  font-style: italic;
+  src:
+    url(./MsCamz/KwhNPG8Jz-Vz2X7.woff2) format("woff2"),
+    url(./MsCamz/YAEPfuhs1l-argd.woff) format("woff");
+}
+
+@font-face {
+  font-family: "MsCorpres EmberFont";
+  font-weight: 700;
+  src:
+    url(./MsCamz/KFPk-9IF4FqAqY-.woff2) format("woff2"),
+    url(./MsCamz/mzVbGSgvdBfRLX9.woff) format("woff");
+}
+
+@font-face {
+  font-family: "MsCorpres EmberFont";
+  font-style: italic;
+  font-weight: 700;
+  src:
+    url(./MsCamz/2SazJx$EeTHfhMN.woff2) format("woff2"),
+    url(./MsCamz/CjbL$jCCegyfqZ7.woff) format("woff");
+}
+
 @media print {
 
   *,
@@ -96,7 +149,7 @@
 
 html {
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -130,9 +183,9 @@ section {
 
 body {
   margin: 0;
-  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
   font-size: 0.875rem;
-  font-weight: normal;
+  font-weight: 500;
   line-height: 1.5;
   color: #868ba1;
   background-color: #D8DCE3;
@@ -331,7 +384,6 @@ select,
 optgroup,
 textarea {
   margin: 0;
-  font-family: inherit;
   font-size: inherit;
   line-height: inherit;
 }
@@ -451,7 +503,7 @@ h6,
 .h5,
 .h6 {
   margin-bottom: 0.5rem;
-  font-family: inherit;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
   font-weight: 500;
   line-height: 1.1;
   color: inherit;
@@ -1650,6 +1702,7 @@ pre code {
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 3px;
+  font-family: inherit;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 
@@ -5067,7 +5120,7 @@ button.close {
   z-index: 1070;
   display: block;
   margin: 0;
-  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: 1.5;
@@ -5193,7 +5246,7 @@ button.close {
   display: block;
   max-width: 276px;
   padding: 1px;
-  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: 1.5;
@@ -11655,7 +11708,7 @@ table.dataTable.no-footer {
 
 .fc-unthemed tbody tr td .fc-day-number {
   padding: 10px;
-  font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
 }
 
 .fc-unthemed tbody tr td .fc-today {
@@ -11940,7 +11993,7 @@ table.dataTable.no-footer {
 
 /* Setup basic CSS for Label */
 .jqvmap-pin {
-  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
   cursor: default;
   pointer-events: none;
 }
@@ -12058,7 +12111,6 @@ table.dataTable.no-footer {
 .ui-datepicker {
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  font-family: inherit;
   font-size: inherit;
   padding: 10px;
   margin: 1px 0 0;
@@ -12252,7 +12304,7 @@ table.dataTable.no-footer {
 
 .fc-datepicker-color .ui-datepicker-calendar th {
   color: rgba(255, 255, 255, 0.5);
-  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
 }
 
 .fc-datepicker-color .ui-datepicker-calendar td {
@@ -12669,7 +12721,7 @@ textarea.parsley-success:focus {
   padding: 8px 15px;
   background-image: none;
   background-color: #ced4da;
-  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
   font-size: 12px;
   text-shadow: none;
   text-transform: capitalize;
@@ -12685,7 +12737,7 @@ textarea.parsley-success:focus {
 }
 
 .sp-button-container .sp-cancel {
-  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
   font-size: 12px;
   text-transform: capitalize;
   color: #868e96 !important;
@@ -12855,7 +12907,7 @@ textarea.parsley-success:focus {
 .card-header.note-toolbar>.btn-group .dropdown-item blockquote,
 .card-header.note-toolbar>.btn-group .dropdown-item pre {
   margin-bottom: 0;
-  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
   font-size: 13px;
 }
 
@@ -12882,7 +12934,7 @@ textarea.parsley-success:focus {
 }
 
 .card-header.note-toolbar>.btn-group .dropdown-fontname .dropdown-item span {
-  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif !important;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif !important;
   font-size: 12px;
 }
 
@@ -13576,7 +13628,7 @@ body {
 
 .sh-pagetitle-title h2 {
   color: #0866C6;
-  font-weight: 300;
+  font-weight: 600;
   margin-bottom: 0;
   margin-left: -2px;
 }
@@ -47071,15 +47123,15 @@ a.hover-white-8:focus {
 }
 
 .tx-poppins {
-  font-family: "Poppins", "Helvetica Neue", Arial, sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
 }
 
 .tx-roboto {
-  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
 }
 
 .tx-mont {
-  font-family: "Montserrat", "Fira Sans", "Helvetica Neue", Arial, sans-serif;
+  font-family: "MsCorpres EmberFont", Arial, sans-serif;
 }
 
 .tx-lato {

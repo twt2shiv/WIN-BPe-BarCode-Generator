@@ -41,7 +41,7 @@
                 <div class="sh-pagetitle-icon"><i class="icon fa fa-qrcode"></i></div>
                 <div class="sh-pagetitle-title">
                     <span>Device Sticker</span>
-                    <h2>Generate</h2>
+                    <h2>Generator</h2>
                 </div>
             </div>
         </div>
@@ -49,22 +49,18 @@
         <div class="sh-pagebody">
             <div class="row">
                 <div class="col-sm-6">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <input class="form-control" placeholder="SCAN IMEI - XXXXX-XXXXX-XXXXX" type="text"
-                                autocomplete="off" minlength="15" maxlength="15" id="inputNumber" required>
+                    <form method="GET">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <input class="form-control" placeholder="SCAN IMEI - XXXXX-XXXXX-XXXXX" type="text"
+                                    autocomplete="off" minlength="15" maxlength="15" id="inputNumber" required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mg-t-20">
-                        <div class="col-sm-12">
-                            <select class="form-control" disabled>
-                                <option value="0" selected>--</option>
-                                <option value="1">OPTION 1</option>
-                                <option value="2">OPTION 2</option>
-                                <option value="3">OPTION 3</option>
-                            </select>
-                        </div>
-                    </div>
+                        <button type="submit" class="btn btn-primary btn-icon mg-r-5 mg-b-10"
+                            style="display: none !important;" id="generateBtn">
+                            <div><i class="fa fa-print"></i></div>
+                        </button>
+                    </form>
                 </div>
                 <div class="col-sm-6">
                     <div class="sk-rotating-plane bg-gray-800" id="loader" style="display: none;"></div>
