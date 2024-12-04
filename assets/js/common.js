@@ -8,18 +8,18 @@ ipcRenderer.invoke('get-app-version').then((version) => {
 });
 
 // Fetch and update server status
-ipcRenderer.invoke('get-server-status').then((status) => {
-    document.getElementById('serverStatus').innerText = status ? 'Online' : 'Offline';
-}).catch(() => {
-    document.getElementById('serverStatus').innerText = 'Offline';
-});
+// ipcRenderer.invoke('get-server-status').then((status) => {
+//     document.getElementById('serverStatus').innerText = status ? 'Online' : 'Offline';
+// }).catch(() => {
+//     document.getElementById('serverStatus').innerText = 'Offline';
+// });
 
 // Fetch and update printer status
-ipcRenderer.invoke('get-printer-status').then((printer) => {
-    document.getElementById('printerStatus').innerText = printer || 'NA';
-}).catch(() => {
-    document.getElementById('printerStatus').innerText = 'NA';
-});
+// ipcRenderer.invoke('get-printer-status').then((printer) => {
+//     document.getElementById('printerStatus').innerText = printer || 'NA';
+// }).catch(() => {
+//     document.getElementById('printerStatus').innerText = 'NA';
+// });
 
 // Minimize window functionality
 document.getElementById('minimize-link').addEventListener('click', () => {

@@ -33,10 +33,11 @@ async function generateBarcode(number) {
         const product = productData.data[0];
         const serialNo = product.serialNo;
         const barcodeDataURL = createBarcode(serialNo);
+        const fileName = product.txn;
 
         const labelHTML = createLabelHTML(barcodeDataURL, product);
 
-        downloadLabel(serialNo, labelHTML);
+        downloadLabel(fileName, labelHTML);
         return;
     } catch (error) {
         console.error('an error occured while generating Sticker 11:', error);
@@ -72,8 +73,8 @@ function createBarcode(number) {
 
 // Function to fetch product data
 async function fetchProductData(number) {
-    // const response = await fetch(`http://localhost:3005/win/QR/fetch/${number}`); // Dev
-    const response = await fetch(`https://api-bpe.mscapi.live/win/QR/fetch/${number}`); // PROD
+    const response = await fetch(`http://localhost:3005/win/QR/sticker/${number}`); // Dev
+    // const response = await fetch(`https://api-bpe.mscapi.live/win/QR/sticker/${number}`); // PROD
 
     const data = await response.json();
 
@@ -82,7 +83,7 @@ async function fetchProductData(number) {
 
 // Function to create label HTML from template
 function createLabelHTML(barcodeDataURL, product) {
-    const templatePath = path.join(__dirname, './../template', 'stickerPrintLabel.html');
+    const templatePath = path.join(__dirname, './../template', 'stickerLabel.html');
     const template = fs.readFileSync(templatePath, 'utf-8');
     return template
         .replace('{barcode}', barcodeDataURL)
@@ -96,10 +97,10 @@ function createLabelHTML(barcodeDataURL, product) {
 }
 
 
-async function downloadLabel(serialNo, labelHTML) {
+async function downloadLabel(fileName, labelHTML) {
     try {
         const outputDir = await ipcRenderer.invoke('get-output-path');
-        const filePath = path.join(outputDir, `${serialNo}_label.html`);
+        const filePath = path.join(outputDir, `${fileName}_sticker-label.html`);
 
         // Ensure the output directory exists
         if (!fs.existsSync(outputDir)) {
