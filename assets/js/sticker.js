@@ -91,7 +91,6 @@ function createLabelHTML(barcodeDataURL, product) {
         .replace('{model}', product.model)
         .replace('{input.voltage}', product.input.voltage)
         .replace('{input.current}', product.input.current)
-        .replace('{pnCode}', product.pnCode)
         .replace('{serialNo}', product.serialNo)
         .replace('{madeBy}', product.madeBy);
 }
@@ -101,6 +100,8 @@ async function downloadLabel(fileName, labelHTML) {
     try {
         const outputDir = await ipcRenderer.invoke('get-output-path');
         const filePath = path.join(outputDir, `${fileName}_sticker-label.html`);
+
+        console.log("==============", filePath);
 
         // Ensure the output directory exists
         if (!fs.existsSync(outputDir)) {
