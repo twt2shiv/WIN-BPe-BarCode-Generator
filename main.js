@@ -7,6 +7,7 @@ const axios = require('axios');
 
 let mainWindow; // Global variable for the main window
 
+
 // Function to create a new window
 function createWindow() {
   if (mainWindow) {

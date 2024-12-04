@@ -59,7 +59,7 @@ function createBarcode(number) {
         margin: 0,
     });
 
-    const desiredWidth = 120;
+    const desiredWidth = 250;
     const desiredHeight = 40;
     const resizedCanvas = document.createElement('canvas');
     resizedCanvas.width = desiredWidth;
@@ -74,7 +74,7 @@ function createBarcode(number) {
 // Function to fetch product data
 async function fetchProductData(number) {
     // const response = await fetch(`http://localhost:3005/win/QR/sticker/${number}`); // Dev
-    const response = await fetch(`https://bpe-temp.mscorpres.net/win/QR/sticker/${number}`); // PROD
+    const response = await fetch(`https://api-bpe.mscapi.live/win/QR/sticker/${number}`); // PROD
 
     const data = await response.json();
 
