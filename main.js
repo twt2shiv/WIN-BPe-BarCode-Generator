@@ -3,6 +3,7 @@ const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+const axios = require('axios');
 
 let mainWindow; // Global variable for the main window
 
@@ -58,27 +59,33 @@ ipcMain.handle('get-network-info', () => {
   return getNetworkInfo();
 });
 
-// Handle the 'get-app-version' request
-ipcMain.handle('get-app-version', () => {
-  const packagePath = path.join(__dirname, 'package.json');
-  const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
-  return packageData.version;  // Return the version from package.json
-});
-
 // Handle request to get printer information
-ipcMain.on('get-printer-info', async (event) => {
+ipcMain.handle('get-printer-info', async () => {
   try {
     const printers = await mainWindow.webContents.getPrintersAsync();
-    event.sender.send('printer-info', printers);
+    // Returning the printer list or a default message
+    return printers.length > 0 ? printers[0].name : 'No Printers Found';
   } catch (error) {
     console.error('Failed to retrieve printers:', error);
-    event.sender.send('printer-info-error', 'Failed to retrieve printers.');
+    throw new Error('Failed to retrieve printers');
   }
 });
 
 // Handle request to get app version
-ipcMain.on('get-app-version', (event) => {
-  event.reply('send-app-version', app.getVersion());
+ipcMain.handle('get-app-version', () => {
+  return app.getVersion();
+});
+
+ipcMain.handle('get-server-status', async () => {
+  try {
+    const response = await axios.get('https://bpe-api.mscapi.live/', {
+      timeout: 30000, // 30-second timeout
+    });
+    return response.status === 200;
+  } catch (error) {
+    console.error('Server check failed:', error.message);
+    return false; 
+  }
 });
 
 // Handle print file request
@@ -212,20 +219,3 @@ if (!gotTheLock) {
     }
   });
 }
-
-
-// /pages
-//   dashboard.html
-//   sticker.html
-// /template
-// index.html
-// main.js
-// package.json
-// preload.js
-// assets/
-//   build/
-//   js/
-//     sticker.js
-// template/
-//     printLabel.html
-// Renderer.js

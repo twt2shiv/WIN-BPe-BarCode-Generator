@@ -2,16 +2,16 @@ const { ipcRenderer } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
-// Generate BIS on Button Click
-document.getElementById('generateBISBtn').addEventListener('click', async () => {
-    const imeiNumber = document.getElementById('bisIMEINumber').value.trim();
+// Generate Barcode on Button Click
+document.getElementById('generateBarcodeBtn').addEventListener('click', async () => {
+    const imeiNumber = document.getElementById('barcodeIMEINumber').value.trim();
 
     if (imeiNumber) {
         try {
-            await generateSticker(imeiNumber);
+            await generateBarcodeSticker(imeiNumber);
         } catch (error) {
-            console.error('an error occured while generating BIS 00:', error);
-            return ipcRenderer.send('show-error', 'an error occured while Generating BIS');
+            console.error('an error occured while generating Barcode 00:', error);
+            return ipcRenderer.send('show-error', 'an error occured while Generating Barcode');
         } finally {
             toggleLoader(false);
         }
@@ -20,8 +20,8 @@ document.getElementById('generateBISBtn').addEventListener('click', async () => 
     }
 });
 
-// Function to generate BIS and display it
-async function generateSticker(number) {
+// Function to generate Barcode and display it
+async function generateBarcodeSticker(number) {
     toggleLoader(true);
     try {
         const imeiAPIData = await getIMEIdataFromServer(number);
@@ -36,8 +36,8 @@ async function generateSticker(number) {
         downloadLabel(fileName, labelHTML);
         return;
     } catch (error) {
-        console.error('an error occured while generating BIS 11:', error);
-        return ipcRenderer.send('show-error', 'an error occured while Generating BIS');
+        console.error('an error occured while generating Barcode 11:', error);
+        return ipcRenderer.send('show-error', 'an error occured while Generating Barcode');
     } finally {
         toggleLoader(false);
     }
@@ -45,17 +45,16 @@ async function generateSticker(number) {
 
 // Function to fetch IMEI data
 async function getIMEIdataFromServer(number) {
-    const response = await fetch(`http://localhost:3005/win/QR/bis/${number}`); // Dev
-    // const response = await fetch(`https://api-bpe.mscapi.live/win/QR/bis/${number}`); // PROD
+    const response = await fetch(`http://localhost:3005/win/QR/barcode/${number}`); // Dev
+    // const response = await fetch(`https://api-bpe.mscapi.live/win/QR/barcode/${number}`); // PROD
 
     const data = await response.json();
-
     return data;
 }
 
 // Function to create label HTML from template
 function createLabelHTML(product) {
-    const templatePath = path.join(__dirname, './../template', 'bisSticker.html');
+    const templatePath = path.join(__dirname, './../template', 'barcodeSticker.html');
     const template = fs.readFileSync(templatePath, 'utf-8');
     return template
         .replace('{lineFirst}', product.lineFirst)
@@ -67,7 +66,7 @@ function createLabelHTML(product) {
 async function downloadLabel(fileName, labelHTML) {
     try {
         const outputDir = await ipcRenderer.invoke('get-output-path');
-        const filePath = path.join(outputDir, `${fileName}_BIS-Label.html`);
+        const filePath = path.join(outputDir, `${fileName}_barcode-Label.html`);
 
         // Ensure the output directory exists
         if (!fs.existsSync(outputDir)) {
@@ -80,11 +79,11 @@ async function downloadLabel(fileName, labelHTML) {
 
         // Automatically print the generated file
         printGeneratedFile(filePath);
-        bisIMEINumber.value = '';
+        barcodeIMEINumber.value = '';
         return;
     } catch (err) {
-        console.error('an error occured while saving BIS sticker:', err);
-        return ipcRenderer.send('show-error', 'an error occured while saving BIS sticker');
+        console.error('an error occured while saving Barcode sticker:', err);
+        return ipcRenderer.send('show-error', 'an error occured while saving Barcode Sticker');
     }
 }
 
@@ -97,5 +96,5 @@ function printGeneratedFile(filePath) {
 // Function to toggle loader visibility
 function toggleLoader(isLoading) {
     document.getElementById('loader').style.display = isLoading ? 'block' : 'none';
-    document.getElementById('generateBISBtn').disabled = isLoading;
+    document.getElementById('generateBarcodeBtn').disabled = isLoading;
 }
