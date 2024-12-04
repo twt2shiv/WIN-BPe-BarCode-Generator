@@ -9,6 +9,7 @@ ipcRenderer.invoke('get-app-version').then((version) => {
 
 // Fetch and update server status
 ipcRenderer.invoke('get-server-status').then((status) => {
+    console.log('Server status:', status);
     document.getElementById('serverStatus').innerText = status ? 'Online' : 'Offline';
 }).catch(() => {
     document.getElementById('serverStatus').innerText = 'Offline';

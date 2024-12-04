@@ -79,7 +79,7 @@ ipcMain.handle('get-app-version', () => {
 
 ipcMain.handle('get-server-status', async () => {
   try {
-    const response = await axios.get('https://bpe-api.mscapi.live/', {
+    const response = await axios.get('https://api-bpe.mscapi.live', {
       timeout: 30000, // 30-second timeout
     });
     return response.status === 200;
@@ -91,11 +91,12 @@ ipcMain.handle('get-server-status', async () => {
 
 // Handle print file request
 ipcMain.on('print-file', (event, filePath) => {
-  // Open the print file
   const printWindow = new BrowserWindow({
     width: 800,
     height: 600,
     show: true,
+    autoHideMenuBar: true,
+    title: 'Print Preview',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
