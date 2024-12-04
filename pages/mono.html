@@ -38,7 +38,7 @@
                 <input type="search" class="form-control" placeholder="Search">
             </div>
             <div class="sh-pagetitle-left">
-                <div class="sh-pagetitle-icon"><i class="icon fa fa-qrcode"></i></div>
+                <div class="sh-pagetitle-icon"><i class="icon fa fa-barcode"></i></div>
                 <div class="sh-pagetitle-title">
                     <span>Barcode Sticker</span>
                     <h2>Generator</h2>
@@ -52,15 +52,34 @@
                     <form method="GET" autocomplete="off" autocapitalize="on">
                         <div class="row">
                             <div class="col-sm-12">
-                                <input class="form-control" placeholder="SCAN IMEI - XXXXX-XXXXX-XXXXX" type="text"
-                                    autocomplete="off" minlength="15" maxlength="15" id="barcodeIMEINumber" required
-                                    autofocus>
+                                <input class="form-control" placeholder="SR No. - XXXX XXXX XXX" type="text" autocomplete="off"
+                                    minlength="11" maxlength="11" id="serialNumber" required autofocus>
+                            </div>
+                            <div class="col-sm-12 mg-t-10">
+                                <input class="form-control" placeholder="SIM No." type="text" autocomplete="off"
+                                    id="simNumber" required>
+                            </div>
+                            <div class="col-sm-12 mg-t-10">
+                                <input class="form-control" placeholder="QR URL" type="text" autocomplete="off"
+                                    id="qrURL" required>
+                            </div>
+                            <div class="col-sm-12 mg-t-10">
+                                <select class="form-control" id="operator">
+                                    <option value="0" selected>--</option>
+                                    <option value="A">Airtel</option>
+                                    <option value="V">Vodafone</option>
+                                </select>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-icon mg-r-5 mg-b-10"
-                            style="display: none !important;" id="generateBarcodeBtn">
-                            <div><i class="fa fa-print"></i></div>
-                        </button>
+                        <div class="mg-t-10 text-right">
+                            <button type="reset" class="btn btn-danger mg-r-5" id="cancelForm">
+                                Reset
+                            </button>
+                            <button type="submit" class="btn btn-primary"
+                                id="generateMonoBarcode">
+                                Generate
+                            </button>
+                        </div>
                     </form>
                 </div>
                 <div class="col-sm-6">
