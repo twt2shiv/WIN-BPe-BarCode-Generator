@@ -82,7 +82,7 @@ async function fetchProductData(number) {
 
 // Function to create label HTML from template
 function createLabelHTML(barcodeDataURL, product) {
-    const templatePath = path.join(__dirname, './../template', 'printLabel.html');
+    const templatePath = path.join(__dirname, './../template', 'stickerPrintLabel.html');
     const template = fs.readFileSync(templatePath, 'utf-8');
     return template
         .replace('{barcode}', barcodeDataURL)

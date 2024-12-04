@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link href="./../assets/css/font/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./../assets/css/shamcey.css">
+</head>
+
+<body>
+    <div class="sh-logopanel">
+        <a class="sh-logo-text" href="./dashboard.html">MsCorpres Barcode Generator</a>
+        <a class="sh-navicon d-xl-block" href="./dashboard.html">
+            <i class="fa fa-home text-white"></i>
+        </a>
+    </div>
+
+    <div class="sh-headpanel">
+        <div class="sh-headpanel-left">
+        </div>
+        <div class="sh-headpanel-right">
+            <!-- <div class="dropdown" style="margin-left: -35px;">
+                <a class="dropdown-link dropdown-link-notification">
+                    <i class="icon fa fa-window-minimize tx-24" style="margin-bottom: 10px;"></i>
+                </a>
+            </div>
+            <div class="dropdown" style="margin-left: 15px;">
+                <a class="dropdown-link dropdown-link-notification">
+                    <i class="icon fa fa-times font-danger tx-24"></i>
+                </a>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="sh-mainpanel">
+        <div class="sh-pagetitle">
+            <div class="input-group">
+                <input type="search" class="form-control" placeholder="Search">
+            </div>
+            <div class="sh-pagetitle-left">
+                <div class="sh-pagetitle-icon"><i class="icon fa fa-qrcode"></i></div>
+                <div class="sh-pagetitle-title">
+                    <span>Device BIS</span>
+                    <h2>Generator</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="sh-pagebody">
+            <div class="row">
+                <div class="col-sm-6">
+                    <form method="GET">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <input class="form-control" placeholder="SCAN IMEI - XXXXX-XXXXX-XXXXX" type="text"
+                                    autocomplete="off" minlength="15" maxlength="15" id="bisIMEINumber" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-icon mg-r-5 mg-b-10"
+                            style="display: none !important;" id="generateBISBtn">
+                            <div><i class="fa fa-print"></i></div>
+                        </button>
+                    </form>
+                </div>
+                <div class="col-sm-6">
+                    <div class="sk-rotating-plane bg-gray-800" id="loader" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../assets/js/bis.js" defer></script>
+</body>
+
+</html>
