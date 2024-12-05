@@ -1,6 +1,6 @@
 {
   "name": "bpe-barcode-generator",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "BharatPe - Barcode Generator",
   "main": "main.js",
   "scripts": {
@@ -22,7 +22,11 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "license": "LICENSE/terms-and-condition.txt"
     },
     "publish": {
       "provider": "github",
