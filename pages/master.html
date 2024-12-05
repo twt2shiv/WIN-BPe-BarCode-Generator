@@ -47,23 +47,25 @@
         </div>
 
         <div class="sh-pagebody">
-            <div class="row">
-                <div class="col-sm-6">
-                    <form method="POST" autocomplete="off" autocapitalize="on" id="masterForm">
+            <form method="POST" autocomplete="off" autocapitalize="on" id="masterForm">
+                <div class="row">
+                    <div class="col-sm-6">
                         <div class="row">
                             <div class="col-sm-12">
                                 <select class="form-control" id="deviceModel">
                                     <option value="0" selected>-DEVICE MODEL-</option>
+                                    <option value="MOD1">MODEL 1</option>
+                                    <option value="MOD2">MODEL 2</option>
+                                    <option value="MOD3">MODEL 3</option>
                                 </select>
                             </div>
                             <div class="col-sm-12 mg-t-10">
                                 <div class="row">
-
                                     <div class="col-sm-6">
                                         <label class="ckbox">
                                             <input type="checkbox"><span>NFC Enable</span>
                                         </label>
-                                    </div><!-- col-6 -->
+                                    </div>
                                     <div class="col-sm-6">
                                         <label class="ckbox">
                                             <input type="checkbox"><span>Adaptor</span>
@@ -74,13 +76,12 @@
                                         <label class="ckbox">
                                             <input type="checkbox"><span>SIM Card</span>
                                         </label>
-                                    </div><!-- col-6 -->
+                                    </div>
                                     <div class="col-sm-6">
                                         <label class="ckbox">
                                             <input type="checkbox"><span>QR</span>
                                         </label>
                                     </div>
-
                                 </div>
                             </div>
                             <div class="col-sm-12 mg-t-10">
@@ -91,15 +92,14 @@
                                 </select>
                             </div>
                             <div class="col-sm-12 mg-t-10">
-                                <input class="form-control" placeholder="QR URL" type="text" autocomplete="off"
-                                    id="qrURL" required>
-                            </div>
-                            <div class="col-sm-12 mg-t-10">
-                                <input class="form-control" placeholder="QR URL" type="text" autocomplete="off"
-                                    id="qrURL" required>
+                                <div class="alert alert-primary pd-25 text-center">
+                                    <p class="mg-b-0 op-8">Lot Size : 30 | <span id="totalScanned">0/30</span> Scanned
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                        <div class="mg-t-10 text-right">
+
+                        <div class="mg-t-10 text-center">
                             <button type="reset" class="btn btn-danger mg-r-5" id="cancelForm">
                                 Reset
                             </button>
@@ -107,19 +107,23 @@
                                 Generate
                             </button>
                         </div>
-                    </form>
-                </div>
-                <div class="col-sm-6">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <input class="form-control" placeholder="IMEI - XXXXX-XXXXX-XXXXX" type="text"
-                                autocomplete="off" id="imeiNumber" minlength="15" maxlength="15" required>
-                        </div>
-                        <div class="col-sm-12 mg-t-10"></div>
                     </div>
-                    <!-- <div class="sk-rotating-plane bg-gray-800" id="loader" style="display: none;"></div> -->
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <input class="form-control" placeholder="SCAN IMEI - XXXXX-XXXXX-XXXXX" type="text"
+                                    autocomplete="off" id="imeiNumber" minlength="15" maxlength="15" required>
+                            </div>
+                            <div class="col-sm-12 mg-t-10">
+                                <textarea rows="14" class="form-control" placeholder="" readonly=""
+                                    style="resize: none !important; overflow: hidden"></textarea>
+                                <div class="sk-rotating-plane bg-gray-800" id="loader" style="display: none;"></div>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
     <script src="./../assets/js/master.js" defer></script>
