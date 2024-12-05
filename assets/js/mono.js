@@ -8,7 +8,6 @@ const generateButton = document.getElementById("generateMonoBarcode");
 
 function validateForm() {
     const serialNumber = document.getElementById("serialNumber").value;
-    const imeiNumber = document.getElementById("imeiNumber").value;
     const simNumber = document.getElementById("simNumber").value;
     const qrURL = document.getElementById("qrURL").value;
     const operator = document.getElementById("operator").value;
@@ -27,12 +26,6 @@ function validateForm() {
         errorMessage += "Invalid SIM ICCID (must be between 19 and 20 characters).\n";
         isValid = false;
         if (!firstErrorField) firstErrorField = document.getElementById("simNumber");
-    }
-
-    if (imeiNumber.length !== 15 || !/^\d{15}$/.test(imeiNumber)) {
-        errorMessage += "Invalid IMEI (must be 15 digits).\n";
-        isValid = false;
-        if (!firstErrorField) firstErrorField = document.getElementById("imeiNumber");
     }
 
     if (!qrURL) {
@@ -61,7 +54,6 @@ form.addEventListener("submit", async function (event) {
         try {
             const formData = {
                 serialNumber: document.getElementById("serialNumber").value,
-                imeiNumber: document.getElementById("imeiNumber").value,
                 simNumber: document.getElementById("simNumber").value,
                 qrURL: document.getElementById("qrURL").value,
                 operator: document.getElementById("operator").value
@@ -76,7 +68,6 @@ form.addEventListener("submit", async function (event) {
                 },
                 body: JSON.stringify({
                     serial: formData.serialNumber,
-                    imei: formData.imeiNumber,
                     sim: formData.simNumber,
                     qrurl: formData.qrURL,
                     operator: formData.operator
@@ -92,7 +83,6 @@ form.addEventListener("submit", async function (event) {
                 const serialBarcode = createBarcode(data.serialNo);
                 const simBarcode = createBarcode(data.iccid);
                 const qrBarcode = createBarcode(data.qrUrl);
-                const imeiNo = data.imeiNo;
 
                 const labelHTML = await createLabelHTML(serialBarcode, simBarcode, qrBarcode, data);
 
