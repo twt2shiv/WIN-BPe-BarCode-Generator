@@ -150,15 +150,14 @@ async function downloadLabel(fileName, labelHTML) {
     try {
         const outputDir = await ipcRenderer.invoke('get-output-path');
         const filePath = path.join(outputDir, `${fileName}_mono-label.html`);
-        console.log("==============", filePath);
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true });
         }
 
         await fs.promises.writeFile(filePath, labelHTML);
-        ipcRenderer.send('show-info', `Job sent to Printer`);
-
         printGeneratedFile(filePath);
+        form.reset();
+        return;
     } catch (err) {
         console.error('An error occurred while saving the sticker:', err);
         ipcRenderer.send('show-error', 'An error occurred while saving the sticker.');
