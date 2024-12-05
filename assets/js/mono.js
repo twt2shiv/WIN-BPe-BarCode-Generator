@@ -1,5 +1,7 @@
 const JsBarcode = require('jsbarcode');
 const { ipcRenderer } = require('electron');
+const path = require('path');
+const fs = require('fs');
 
 const form = document.getElementById("monoForm");
 const generateButton = document.getElementById("generateMonoBarcode");
@@ -40,14 +42,14 @@ function validateForm() {
 
     if (!isValid) {
         ipcRenderer.send('show-error', errorMessage);
-        if (firstErrorField) firstErrorField.focus(); 
+        if (firstErrorField) firstErrorField.focus();
     }
 
     return isValid;
 }
 
 form.addEventListener("submit", async function (event) {
-    event.preventDefault(); 
+    event.preventDefault();
     if (validateForm()) {
         try {
             const formData = {
@@ -57,8 +59,8 @@ form.addEventListener("submit", async function (event) {
                 operator: document.getElementById("operator").value
             };
 
-            toggleLoader(true); 
-            
+            toggleLoader(true);
+
             const response = await fetch(`http://localhost:3005/win/QR/mono/${formData.serialNumber}`, {
                 method: 'POST',
                 headers: {
@@ -77,17 +79,23 @@ form.addEventListener("submit", async function (event) {
                 const data = apiResponse.data;
 
                 console.log("API Response Data:", data);
+                const serialBarcode = createBarcode(formData.serialNumber);
+                const simBarcode = createBarcode(formData.simNumber);
+                const qrBarcode = createBarcode(formData.qrURL);
 
-                alert(`Success! ICCID: ${data.iccid}, QR URL: ${data.qrUrl}, Operator: ${data.operator}, Transaction ID: ${data.txn}`);
+                const labelHTML = await createLabelHTML(serialBarcode, simBarcode, qrBarcode, data);
+
+                ipcRenderer('show-info', 'Print Sent to Printer');
+                await downloadLabel(data.txn, labelHTML);
             } else {
                 ipcRenderer.send('show-error', apiResponse.message || 'Unknown error');
             }
 
-            toggleLoader(false); 
+            toggleLoader(false);
         } catch (error) {
-            console.error("Error during form validation:", error);
-            alert("An error occurred during form validation.");
-            toggleLoader(false); 
+            console.error("Error during form submission:", error);
+            ipcRenderer.send('show-error', 'An error occurred during form submission.');
+            toggleLoader(false);
         }
     }
 });
@@ -100,6 +108,51 @@ function toggleLoader(isLoading) {
     }
 }
 
-window.addEventListener('load', function () {
-    // No automatic validation, form validation will only happen when the user clicks submit
-});
+function createBarcode(content) {
+    const canvas = document.createElement('canvas');
+    JsBarcode(canvas, content, {
+        format: 'CODE128',
+        width: 2,
+        height: 40,
+        displayValue: false,
+        margin: 0,
+    });
+
+    return canvas.toDataURL();
+}
+
+async function createLabelHTML(serialBarcode, simBarcode, qrBarcode, data) {
+    const templatePath = path.join(__dirname, './../template', 'monoSticker.html');
+    const template = await fs.promises.readFile(templatePath, 'utf-8');
+    return template
+        .replace('{serialBarcode}', serialBarcode)
+        .replace('{simBarcode}', simBarcode)
+        .replace('{qrBarcode}', qrBarcode)
+        .replace('{serialNo}', data.serialNo)
+        .replace('{simNumer}', data.iccid)
+        .replace('{operator}', data.operator)
+        .replace('{qrURL}', data.qrUrl);
+}
+
+async function downloadLabel(fileName, labelHTML) {
+    try {
+        const outputDir = await ipcRenderer.invoke('get-output-path');
+        const filePath = path.join(outputDir, `${fileName}_mono-label.html`);
+
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir, { recursive: true });
+        }
+
+        await fs.promises.writeFile(filePath, labelHTML);
+        ipcRenderer.send('show-info', `File created successfully at ${filePath}`);
+
+        printGeneratedFile(filePath);
+    } catch (err) {
+        console.error('An error occurred while saving the sticker:', err);
+        ipcRenderer.send('show-error', 'An error occurred while saving the sticker.');
+    }
+}
+
+function printGeneratedFile(filePath) {
+    ipcRenderer.send('print-file', filePath);
+}

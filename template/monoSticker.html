@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: 109.60px 109.60px;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            border: 1px solid rgb(206, 206, 206);
+            width: 300px;
+            height: 300px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            text-align: center;
+        }
+
+        img {
+            width: 200px;
+            height: auto;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 30px;
+        }
+
+        p {
+            line-height: 19px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div>
+            <img src="{serialBarcode}" />
+            <p>{serialNo}</p>
+        </div>
+
+        <div>
+            <img src="{simBarcode}" />
+            <p>SIM No.- {simNumer}</p>
+
+            <p>Operator No.- {operator}</p>
+        </div>
+        <div>
+            <img src="{qrBarcode}" />
+            <p>QR</p>
+        </div>
+    </div>
+</body>
+
+</html>
