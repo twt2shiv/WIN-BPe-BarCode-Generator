@@ -133,7 +133,7 @@ async function createLabelHTML(serialBarcode, simBarcode, qrBarcode, data) {
         .replace('{simBarcode}', simBarcode)
         .replace('{qrBarcode}', qrBarcode)
         .replace('{serialNo}', data.serialNo)
-        .replace('{simNumer}', data.iccid)
+        .replace('{simNumber}', data.iccid)
         .replace('{operator}', data.operator)
         .replace('{qrURL}', data.qrUrl);
 }

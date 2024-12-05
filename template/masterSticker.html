@@ -54,18 +54,22 @@
 <body>
     <div class="card">
         <div>
-            <img src="{serialBarcode}" />
-            <p>{serialNo}</p>
+            <p>Device Model - {deviceModel}</p>
+            <p>NFC Enabled - {nfcEnabled}</p>
+            <p>Adapter - {adapterStatus}</p>
+            <p>QR - {qrStatus}</p>
+            <p>SIM Card - {simStatus}</p>
+
+            <p>QTY- 30</p>
+            <p>BOX Date - {boxDate}</p>
+            <p>SIM Operator - {simOperator}</p>
         </div>
 
         <div>
-            <img src="{simBarcode}" />
-            <p>SIM No.- {simNumber}</p>
-            <p>Operator - {operator}</p>
+            <img src="{boxBarcode}" />
         </div>
         <div>
-            <img src="{qrBarcode}" />
-            <p>QR</p>
+            <img src="{boxQRcode}" style="height: 200;" />
         </div>
     </div>
 </body>
