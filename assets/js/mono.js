@@ -8,6 +8,7 @@ const generateButton = document.getElementById("generateMonoBarcode");
 
 function validateForm() {
     const serialNumber = document.getElementById("serialNumber").value;
+    const imeiNumber = document.getElementById("imeiNumber").value;
     const simNumber = document.getElementById("simNumber").value;
     const qrURL = document.getElementById("qrURL").value;
     const operator = document.getElementById("operator").value;
@@ -26,6 +27,12 @@ function validateForm() {
         errorMessage += "Invalid SIM ICCID (must be between 19 and 20 characters).\n";
         isValid = false;
         if (!firstErrorField) firstErrorField = document.getElementById("simNumber");
+    }
+
+    if (imeiNumber.length !== 15 || !/^\d{15}$/.test(imeiNumber)) {
+        errorMessage += "Invalid IMEI (must be 15 digits).\n";
+        isValid = false;
+        if (!firstErrorField) firstErrorField = document.getElementById("imeiNumber");
     }
 
     if (!qrURL) {
@@ -54,6 +61,7 @@ form.addEventListener("submit", async function (event) {
         try {
             const formData = {
                 serialNumber: document.getElementById("serialNumber").value,
+                imeiNumber: document.getElementById("imeiNumber").value,
                 simNumber: document.getElementById("simNumber").value,
                 qrURL: document.getElementById("qrURL").value,
                 operator: document.getElementById("operator").value
@@ -67,7 +75,9 @@ form.addEventListener("submit", async function (event) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    iccid: formData.simNumber,
+                    serial: formData.serialNumber,
+                    imei: formData.imeiNumber,
+                    sim: formData.simNumber,
                     qrurl: formData.qrURL,
                     operator: formData.operator
                 })
@@ -79,13 +89,14 @@ form.addEventListener("submit", async function (event) {
                 const data = apiResponse.data;
 
                 console.log("API Response Data:", data);
-                const serialBarcode = createBarcode(formData.serialNumber);
-                const simBarcode = createBarcode(formData.simNumber);
-                const qrBarcode = createBarcode(formData.qrURL);
+                const serialBarcode = createBarcode(data.serialNo);
+                const simBarcode = createBarcode(data.iccid);
+                const qrBarcode = createBarcode(data.qrUrl);
+                const imeiNo = data.imeiNo;
 
                 const labelHTML = await createLabelHTML(serialBarcode, simBarcode, qrBarcode, data);
 
-                ipcRenderer('show-info', 'Print Sent to Printer');
+                ipcRenderer.send('show-info', 'Print Sent to Printer');
                 await downloadLabel(data.txn, labelHTML);
             } else {
                 ipcRenderer.send('show-error', apiResponse.message || 'Unknown error');
@@ -122,6 +133,7 @@ function createBarcode(content) {
 }
 
 async function createLabelHTML(serialBarcode, simBarcode, qrBarcode, data) {
+    console.log("data", data);
     const templatePath = path.join(__dirname, './../template', 'monoSticker.html');
     const template = await fs.promises.readFile(templatePath, 'utf-8');
     return template
@@ -138,13 +150,13 @@ async function downloadLabel(fileName, labelHTML) {
     try {
         const outputDir = await ipcRenderer.invoke('get-output-path');
         const filePath = path.join(outputDir, `${fileName}_mono-label.html`);
-
+        console.log("==============", filePath);
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true });
         }
 
         await fs.promises.writeFile(filePath, labelHTML);
-        ipcRenderer.send('show-info', `File created successfully at ${filePath}`);
+        ipcRenderer.send('show-info', `Job sent to Printer`);
 
         printGeneratedFile(filePath);
     } catch (err) {
