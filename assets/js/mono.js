@@ -5,6 +5,7 @@ const fs = require('fs');
 
 const form = document.getElementById("monoForm");
 const generateButton = document.getElementById("generateMonoBarcode");
+const cancelButton = document.getElementById("cancelForm");
 
 function validateForm() {
     const serialNumber = document.getElementById("serialNumber").value;
@@ -105,6 +106,7 @@ function toggleLoader(isLoading) {
     const loader = document.getElementById('loader');
     if (loader) {
         generateButton.disabled = isLoading;
+        cancelButton.disabled = isLoading;
         loader.style.display = isLoading ? 'block' : 'none';
     }
 }

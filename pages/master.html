@@ -63,23 +63,23 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label class="ckbox">
-                                            <input type="checkbox"><span>NFC Enable</span>
+                                            <input type="checkbox" id="nfcStatus"><span>NFC Enable</span>
                                         </label>
                                     </div>
                                     <div class="col-sm-6">
                                         <label class="ckbox">
-                                            <input type="checkbox"><span>Adaptor</span>
+                                            <input type="checkbox" id="adaptorStatus"><span>Adaptor</span>
                                         </label>
                                     </div>
 
                                     <div class="col-sm-6">
                                         <label class="ckbox">
-                                            <input type="checkbox"><span>SIM Card</span>
+                                            <input type="checkbox" id="simStatus"><span>SIM Card</span>
                                         </label>
                                     </div>
                                     <div class="col-sm-6">
                                         <label class="ckbox">
-                                            <input type="checkbox"><span>QR</span>
+                                            <input type="checkbox" id="qrStatus"><span>QR</span>
                                         </label>
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@
                             <button type="reset" class="btn btn-danger mg-r-5" id="cancelForm">
                                 Reset
                             </button>
-                            <button type="submit" class="btn btn-primary" id="generateMonoBarcode">
+                            <button type="submit" class="btn btn-primary" id="generateMasterQRcode">
                                 Generate
                             </button>
                         </div>
@@ -112,10 +112,10 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <input class="form-control" placeholder="SCAN IMEI - XXXXX-XXXXX-XXXXX" type="text"
-                                    autocomplete="off" id="imeiNumber" minlength="15" maxlength="15" required>
+                                    autocomplete="off" id="imeiNumber" minlength="15" maxlength="15" autofocus>
                             </div>
                             <div class="col-sm-12 mg-t-10">
-                                <textarea rows="14" class="form-control" placeholder="" readonly=""
+                                <textarea rows="14" class="form-control" id="imeiList" readonly=""
                                     style="resize: none !important; overflow: hidden"></textarea>
                                 <div class="sk-rotating-plane bg-gray-800" id="loader" style="display: none;"></div>
 
