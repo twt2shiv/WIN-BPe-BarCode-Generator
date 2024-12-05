@@ -94,16 +94,6 @@ form.addEventListener("submit", async function (event) {
     event.preventDefault();
     if (validateForm()) {
         try {
-            const formData = {
-                device: document.getElementById("deviceModel").value,
-                operator: document.getElementById("operator").value,
-                imeis: Array.from(scannedIMEIs),
-                nfcEnabled: document.getElementById("nfcStatus").checked,
-                adaptorIncluded: document.getElementById("adaptorStatus").checked,
-                simCardIncluded: document.getElementById("simStatus").checked,
-                qrEnabled: document.getElementById("qrStatus").checked,
-            };
-
             toggleLoader(true);
 
             const response = await fetch(`https://api-bpe.mscapi.live/win/QR/master`, {
@@ -111,7 +101,15 @@ form.addEventListener("submit", async function (event) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ data: formData })
+                body: JSON.stringify({
+                    device: document.getElementById("deviceModel").value,
+                    operator: document.getElementById("operator").value,
+                    imeis: Array.from(scannedIMEIs),
+                    nfcEnabled: document.getElementById("nfcStatus").checked,
+                    adaptorIncluded: document.getElementById("adaptorStatus").checked,
+                    simCardIncluded: document.getElementById("simStatus").checked,
+                    qrEnabled: document.getElementById("qrStatus").checked,
+                })
             });
 
             const apiResponse = await response.json();
