@@ -49,23 +49,23 @@
         <div class="sh-pagebody">
             <div class="row">
                 <div class="col-sm-6">
-                    <form method="GET" autocomplete="off" autocapitalize="on">
+                    <form method="POST" autocomplete="off" autocapitalize="on" id="monoForm">
                         <div class="row">
                             <div class="col-sm-12">
                                 <input class="form-control" placeholder="SR No. - XXXX XXXX XXX" type="text" autocomplete="off"
-                                    minlength="11" maxlength="11" id="serialNumber" required autofocus>
+                                     id="serialNumber" minlength="11" maxlength="11"  autofocus>
                             </div>
                             <div class="col-sm-12 mg-t-10">
-                                <input class="form-control" placeholder="SIM No." type="text" autocomplete="off"
-                                    id="simNumber" required>
+                                <input class="form-control" placeholder="SIM ICCID" type="text" autocomplete="off"
+                                    id="simNumber" minlength="19" maxlength="20" >
                             </div>
                             <div class="col-sm-12 mg-t-10">
                                 <input class="form-control" placeholder="QR URL" type="text" autocomplete="off"
-                                    id="qrURL" required>
+                                    id="qrURL" >
                             </div>
                             <div class="col-sm-12 mg-t-10">
                                 <select class="form-control" id="operator">
-                                    <option value="0" selected>--</option>
+                                    <option value="0" selected>-SIM OPERATOR-</option>
                                     <option value="A">Airtel</option>
                                     <option value="V">Vodafone</option>
                                 </select>
@@ -88,7 +88,7 @@
             </div>
         </div>
     </div>
-    <script src="./../assets/js/barcode.js" defer></script>
+    <script src="./../assets/js/mono.js" defer></script>
 </body>
 
 </html>
