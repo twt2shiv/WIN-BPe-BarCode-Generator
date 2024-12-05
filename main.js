@@ -192,7 +192,7 @@ app.whenReady().then(() => {
   createWindow();
 
   autoUpdater.checkForUpdates();
-  setInterval(() => autoUpdater.checkForUpdates(), 30 * 1000); // Check for updates every 30 seconds
+  setInterval(() => autoUpdater.checkForUpdates(), 60 * 1000); // Check for updates every 60 seconds
 
   app.on('activate', () => {
     // Open a new window only if no other windows are open
