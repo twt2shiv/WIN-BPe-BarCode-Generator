@@ -115,45 +115,13 @@ form.addEventListener("submit", async function (event) {
 
             const apiResponse = await response.json();
 
-            // AND the repsonse is like as below
-            // {
-            //     "success": true,
-            //     "data": {
-            //         "isOK": true,
-            //         "deviceModel": "MOD1",
-            //         "imeis": [
-            //             "864946060293114",
-            //             "860931067338884"
-            //         ],
-            //         "serials": [
-            //             "00049769791",
-            //             "00067570289"
-            //         ],
-            //         "nfcEnabled": "Yes",
-            //         "adaptorIncluded": "Yes",
-            //         "simCardIncluded": "No",
-            //         "qrEnabled": "No",
-            //         "operator": "Airtel",
-            //         "boxNumber": "BOX/05122024/213552/76737/A",
-            //         "txnDt": "05-12-2024 21:35:52",
-            //         "txn": "67b3def3-b973-4d6d-bd21-da074c96e16d"
-            //     },
-            //     "status": "success"
-            // }
-
-            // I want to create the barcode of boxNumber , qrcode of the data [serial number, imeis, serials]
-
             createBarcode
             if (apiResponse.success && apiResponse.data.isOK) {
                 const data = apiResponse.data;
-                // my approch was like this
-                const boxBarcode = createBarcode(data.boxNumber);
-                // for qr code I dont know the code
                 const labelHTML = await createLabelHTML(data);
-
                 ipcRenderer.send('show-info', 'Print Sent to Printer');
                 await downloadLabel(data.txn, labelHTML);
-                // form.reset();
+                form.reset();
             } else {
                 ipcRenderer.send('show-error', apiResponse.message || 'Unknown error');
             }
@@ -199,11 +167,11 @@ function createQRCode(data) {
         });
 
         QRCode.toDataURL(qrData, {
-            width: 200,  // Width of the QR Code
-            margin: 1    // Margin around QR Code
+            width: 200,  
+            margin: 1   
         }, function (err, url) {
             if (err) reject(err);
-            resolve(url);  // Return the QR code as a Data URL
+            resolve(url);  
         });
     });
 }
