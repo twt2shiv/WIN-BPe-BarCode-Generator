@@ -1714,9 +1714,9 @@ pre code {
 
 .form-control:focus,
 .dataTables_filter input:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #55a6f8;
+  color: #ffffff;
+  background-color: #fff87a;
+  border-color: #baaa00;
   outline: none;
 }
 
@@ -58522,4 +58522,8 @@ a.hover-white-8:focus {
     -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
     transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
   }
+}
+
+label:focus-within, button:focus-within {
+outline: 1px dashed #0759ad !important;
 }
