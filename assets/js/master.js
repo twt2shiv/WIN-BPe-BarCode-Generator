@@ -2,59 +2,60 @@ const JsBarcode = require('jsbarcode');
 const QRCode = require('qrcode');
 const { ipcRenderer } = require('electron');
 const path = require('path');
+
 const fs = require('fs');
 
 const form = document.getElementById("masterForm");
 const generateButton = document.getElementById("generateMasterQRcode");
 const cancelButton = document.getElementById("cancelForm");
-const imeiInput = document.getElementById("imeiNumber");
-const imeiList = document.getElementById("imeiList");
+const serialInput = document.getElementById("serialNumber");
+const serialList = document.getElementById("serialList");
 const totalScanned = document.getElementById("totalScanned");
 
 const lotSize = 30;
-const scannedIMEIs = new Set();
+const scannedSerials = new Set();
 
 function updateTotalScanned() {
-    totalScanned.textContent = `${scannedIMEIs.size}/${lotSize}`;
-    imeiInput.disabled = scannedIMEIs.size >= lotSize;
+    totalScanned.textContent = `${scannedSerials.size}/${lotSize}`;
+    serialInput.disabled = scannedSerials.size >= lotSize;
 }
 
-imeiInput.addEventListener("keydown", function (event) {
+serialInput.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
 
-        const imei = imeiInput.value.trim();
+        const serial = serialInput.value.trim();
 
-        if (imei.length !== 15 || isNaN(imei)) {
-            ipcRenderer.send("show-error", "Invalid IMEI. Please enter a 15-digit numeric IMEI.");
-            imeiInput.value = "";
+        if (serial.length !== 11 || isNaN(serial)) {
+            ipcRenderer.send("show-error", "Invalid Serial. Please enter a 11-digit numeric Serial.");
+            serialInput.value = "";
             return;
         }
 
-        if (scannedIMEIs.has(imei)) {
-            ipcRenderer.send("show-error", "Duplicate IMEI. Please scan a unique IMEI.");
-            imeiInput.value = "";
+        if (scannedSerials.has(serial)) {
+            ipcRenderer.send("show-error", "Duplicate Serial. Please scan a unique Serial.");
+            serialInput.value = "";
             return;
         }
 
-        if (scannedIMEIs.size >= lotSize) {
-            ipcRenderer.send("show-error", `Lot size limit reached. You can only scan ${lotSize} IMEIs.`);
-            imeiInput.value = "";
+        if (scannedSerials.size >= lotSize) {
+            ipcRenderer.send("show-error", `Lot size limit reached. You can only scan ${lotSize} Serials.`);
+            serialInput.value = "";
             return;
         }
 
-        scannedIMEIs.add(imei);
-        imeiList.value += imei + "\n";
-        imeiInput.value = "";
+        scannedSerials.add(serial);
+        serialList.value += serial + "\n";
+        serialInput.value = "";
 
         updateTotalScanned();
     }
 });
 
 form.addEventListener("reset", function () {
-    scannedIMEIs.clear();
-    imeiList.value = "";
-    imeiInput.disabled = false;
+    scannedSerials.clear();
+    serialList.value = "";
+    serialInput.disabled = false;
     updateTotalScanned();
 });
 
@@ -78,8 +79,8 @@ function validateForm() {
         if (!firstErrorField) firstErrorField = document.getElementById("operator");
     }
 
-    if (scannedIMEIs.size === 0) {
-        errorMessage += "No IMEIs scanned. Please scan at least one IMEI before submitting.\n";
+    if (scannedSerials.size === 0) {
+        errorMessage += "No Serials scanned. Please scan at least one Serial before submitting.\n";
         isValid = false;
     }
 
@@ -105,7 +106,7 @@ form.addEventListener("submit", async function (event) {
                 body: JSON.stringify({
                     device: document.getElementById("deviceModel").value,
                     operator: document.getElementById("operator").value,
-                    imeis: Array.from(scannedIMEIs),
+                    serials: Array.from(scannedSerials),
                     nfcEnabled: document.getElementById("nfcStatus").checked,
                     adaptorIncluded: document.getElementById("adaptorStatus").checked,
                     simCardIncluded: document.getElementById("simStatus").checked,
@@ -139,7 +140,7 @@ function toggleLoader(isLoading) {
     if (loader) {
         generateButton.disabled = isLoading;
         cancelButton.disabled = isLoading;
-        imeiList.style.display = isLoading ? 'none' : 'block';
+        serialList.style.display = isLoading ? 'none' : 'block';
         loader.style.display = isLoading ? 'block' : 'none';
     }
 }
