@@ -1714,7 +1714,7 @@ pre code {
 
 .form-control:focus,
 .dataTables_filter input:focus {
-  color: #ffffff;
+  color: #495057;
   background-color: #fff87a;
   border-color: #baaa00;
   outline: none;
