@@ -20,6 +20,10 @@
       "target": "nsis",
       "icon": "assets/build/favicon.ico"
     },
+    "dmg": {
+      "publisher": "MsCorpres Automation Private Limited",
+      "icon": "assets/build/favicon.ico"
+    },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
