@@ -152,8 +152,11 @@ ipcMain.on('close-window', async () => {
       const outputDir = path.join(app.getPath('userData'), 'output');
       deleteFilesInDirectory(outputDir);
     });
+
+    app.quit(); 
   }
 });
+
 
 ipcMain.handle('get-output-path', () => {
   const outputDir = path.join(app.getPath('userData'), 'output');
