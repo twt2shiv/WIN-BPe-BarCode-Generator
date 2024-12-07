@@ -148,7 +148,10 @@ ipcMain.on('close-window', async () => {
   });
 
   if (response.response === 1) {
-    app.quit(); // Close the application if "OK" is selected
+    app.on('quit', () => {
+      const outputDir = path.join(app.getPath('userData'), 'output');
+      deleteFilesInDirectory(outputDir);
+    });
   }
 });
 
@@ -164,7 +167,7 @@ autoUpdater.on('update-available', (info) => {
     return;
   }
 
-  const newVersion = info.version;  
+  const newVersion = info.version;
 
   dialog
     .showMessageBox(mainWindow, {
@@ -175,8 +178,8 @@ autoUpdater.on('update-available', (info) => {
     })
     .then((result) => {
       if (result.response === 0) {
-        isDownloading = true; 
-        autoUpdater.downloadUpdate(); 
+        isDownloading = true;
+        autoUpdater.downloadUpdate();
       } else {
         console.log('User declined the update download.');
       }
@@ -252,3 +255,18 @@ if (!gotTheLock) {
   });
 }
 
+
+const deleteFilesInDirectory = (dirPath) => {
+  try {
+    const files = fs.readdirSync(dirPath);
+    files.forEach((file) => {
+      const filePath = path.join(dirPath, file);
+      if (fs.lstatSync(filePath).isFile()) {
+        fs.unlinkSync(filePath); // Delete the file
+      }
+    });
+    console.log('All files deleted in the directory:', dirPath);
+  } catch (err) {
+    console.error('Error deleting files:', err);
+  }
+};
