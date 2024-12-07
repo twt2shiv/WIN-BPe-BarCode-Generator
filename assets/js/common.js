@@ -49,44 +49,32 @@ ipcRenderer.invoke('get-network-info').then((networkInfo) => {
     document.getElementById('ipAddress').innerText = 'N/A';
 });
 
+function showProgress() {
+    const progressBar = document.getElementById('downloadProgress');
+    progressBar.style.display = 'block'; 
+}
+
+// Update the progress bar
+function updateProgress(percent) {
+    const progressBar = document.getElementById('downloadProgress');
+    progressBar.style.width = `${percent}%`;
+    progressBar.setAttribute('aria-valuenow', percent); 
+}
+
+// Hide the progress bar when the download is complete
+function hideProgress() {
+    const progressBar = document.getElementById('downloadProgress');
+    progressBar.style.display = 'none'; 
+}
+
+// Listen for progress updates from the main process
 ipcRenderer.on('update-download-progress', (event, progress) => {
-    console.log('Received progress update:', progress);
-    const { percent, elapsedTime, remainingTime, downloadSpeed, totalBytes, transferredBytes } = progress;
-
-    const progressDiv = document.getElementById('dashboard-progress');
-    if (progressDiv.style.display === 'none') {
-        progressDiv.style.display = 'block';
-    }
-
-    const mainDashboard = document.getElementById('main-dashboard');
-    mainDashboard.style.display = 'none';
-
-    document.getElementById('downloadProgress').style.width = percent + '%';
-    document.getElementById('totalDownloadProgress').innerText = `${percent.toFixed(0)}%`;
-
-    const minutesElapsed = Math.floor(elapsedTime / 60);
-    const secondsElapsed = elapsedTime % 60;
-    const minutesRemaining = Math.floor(remainingTime / 60);
-    const secondsRemaining = remainingTime % 60;
-
-    document.getElementById('downloadStatus').innerText = `Total Time elapsed: ${minutesElapsed}:${secondsElapsed < 10 ? '0' + secondsElapsed : secondsElapsed} | estimated time to complete: ${minutesRemaining}:${secondsRemaining < 10 ? '0' + secondsRemaining : secondsRemaining}`;
-
-    console.log('Download Speed:', downloadSpeed, 'bytes/sec');
+    const percent = Math.round(progress.percent); 
+    showProgress(); 
+    updateProgress(percent);
 });
 
-
+// Listen for the completion event
 ipcRenderer.on('update-complete', () => {
-    // Hide the progress div
-    document.getElementById('dashboard-progress').style.display = 'none';
-
-    // Show the main dashboard content
-    const mainDashboard = document.getElementById('main-dashboard');
-    mainDashboard.style.display = 'block';
-});
-
-ipcRenderer.on('update-canceled', () => {
-    document.getElementById('dashboard-progress').style.display = 'none';
-
-    const mainDashboard = document.getElementById('main-dashboard');
-    mainDashboard.style.display = 'block';
+    hideProgress(); 
 });
