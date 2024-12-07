@@ -193,7 +193,8 @@ async function createLabelHTML(data) {
         .replace('{simOperator}', data.operator)
         .replace('{boxDate}', data.txnDt)
         .replace('{boxBarcode}', boxBarcode)
-        .replace('{boxQRcode}', boxQRCode);
+        .replace('{boxQRcode}', boxQRCode).
+        replace('{boxNumber}', data.boxNumber);
 }
 
 async function downloadLabel(fileName, labelHTML) {

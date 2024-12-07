@@ -221,7 +221,7 @@ app.whenReady().then(() => {
   createWindow();
 
   autoUpdater.checkForUpdates();
-  setInterval(() => autoUpdater.checkForUpdates(), 30 * 1000); // Check for updates every 30 seconds
+  setInterval(() => autoUpdater.checkForUpdates(), 300 * 1000); // Check for updates every 5 minutes
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
