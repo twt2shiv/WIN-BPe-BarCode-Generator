@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="./../assets/css/shamcey.css">
 </head>
 
-<body ondragstart="return false" onselectstart="return false" oncontextmenu="return false" oncopy="return false" oncut="return false">
+<body ondragstart="return false" onselectstart="return false" oncontextmenu="return false" oncopy="return false"
+    oncut="return false">
     <div class="sh-logopanel">
         <a class="sh-logo-text">MsCorpres Barcode Generator</a>
         <a class="sh-navicon d-xl-block">
@@ -33,79 +34,99 @@
     </div>
 
     <div class="sh-mainpanel">
-        <div class="sh-pagetitle">
-            <div class="input-group">
-                <input type="search" class="form-control" placeholder="Search">
-            </div>
-            <div class="sh-pagetitle-left">
-                <div class="sh-pagetitle-icon"><i class="icon fa fa-home"></i></div>
-                <div class="sh-pagetitle-title">
-                    <span>All Features Summary</span>
-                    <h2>Dashboard</h2>
+        <div style=" position: absolute; top:0; bottom: 0; left: 0; right: 0; margin: auto; width: 100%; height: 50%; background-color: white; display: none;"
+            id="dashboard-progress">
+            <div
+                style="position: relative;top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);width: 80%;">
+                <div class="progress mg-t-20">
+                    <div class="progress-bar progress-bar-xs wd-25p bg-success" role="progressbar" aria-valuenow=""
+                        aria-valuemin="0" aria-valuemax="100" id="downloadProgress"></div>
                 </div>
+                <p style="margin-top: 10px; font-weight: bold;">Please wait...</p>
+                <p id="totalDownloadProgress">00%</p>
+                <p id="downloadStatus">Total Time elapsed: 00:00 | estimated time to complete: 00:00</p>
+                <span style="font-size: 10px; font-weight: 500;">This may take a few moments based on the your
+                    internet speed</span>
             </div>
         </div>
 
-        <div class="sh-pagebody">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <a href="./sticker.html" id="sticker-link" class="shortcut-icon">
-                                <div>
-                                    <i class="icon fa fa-newspaper-o"></i>
-                                    <span>DEVICE STICKER</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-sm-6">
-                            <a href="./bis.html" class="shortcut-icon">
-                                <div>
-                                    <i class="icon fa fa-file-text-o"></i>
-                                    <span>BIS</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-sm-6 mg-t-10 mg-md-t-0">
-                            <a href="./mono.html" class="shortcut-icon">
-                                <div>
-                                    <i class="icon fa fa-barcode"></i>
-                                    <span>MONO STICKER</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-sm-6 col-6 mg-t-10 mg-md-t-0">
-                            <a href="./master.html" class="shortcut-icon">
-                                <div>
-                                    <i class="icon fa fa-qrcode"></i>
-                                    <span>MASTER QR</span>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="progress mg-t-20">
-                        <div class="progress-bar progress-bar-xs wd-25p bg-success" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" id="downloadProgress" style="display: none;"></div>
+        <div class="main-dashboard" style="display: block;">
+            <div class="sh-pagetitle">
+                <div class="input-group">
+                    <input type="search" class="form-control" placeholder="Search">
+                </div>
+                <div class="sh-pagetitle-left">
+                    <div class="sh-pagetitle-icon"><i class="icon fa fa-home"></i></div>
+                    <div class="sh-pagetitle-title">
+                        <span>All Features Summary</span>
+                        <h2>Dashboard</h2>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <div class="card bd-primary">
-                        <div class="card-header bg-primary tx-white">General Information
+            </div>
+
+            <div class="sh-pagebody">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <a href="./sticker.html" id="sticker-link" class="shortcut-icon">
+                                    <div>
+                                        <i class="icon fa fa-newspaper-o"></i>
+                                        <span>DEVICE STICKER</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="./bis.html" class="shortcut-icon">
+                                    <div>
+                                        <i class="icon fa fa-file-text-o"></i>
+                                        <span>BIS</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-sm-6 mg-t-10 mg-md-t-0">
+                                <a href="./mono.html" class="shortcut-icon">
+                                    <div>
+                                        <i class="icon fa fa-barcode"></i>
+                                        <span>MONO STICKER</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-sm-6 col-6 mg-t-10 mg-md-t-0">
+                                <a href="./master.html" class="shortcut-icon">
+                                    <div>
+                                        <i class="icon fa fa-qrcode"></i>
+                                        <span>MASTER QR</span>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
-                        <div class="card-body" style="min-height: 280px; max-height: 280px;">
-                            Server Status - <span id="serverStatus">Checking...</span>
-                            <br />
-                            <br />
-                            Printer -<br />
-                            <span id="printerStatus" style="font-size: 13px;">Checking...</span>
-                            <br />
-                            <br />
-                            App Version: 
-                            <br />
-                            <span id="appVersion" style="font-size: 13px;">Loading...</span>
-                            <br />
-                            <br />
-                            MAC Address: <span id="macAddress">Loading...</span><br />
-                            IP Address: <span id="ipAddress">Loading...</span>
+                        <!-- <div class="progress mg-t-20">
+                            <div class="progress-bar progress-bar-xs wd-25p bg-success" role="progressbar"
+                                aria-valuenow="" aria-valuemin="0" aria-valuemax="100" id="downloadProgress"
+                                style="display: none;"></div>
+                        </div> -->
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card bd-primary">
+                            <div class="card-header bg-primary tx-white">General Information
+                            </div>
+                            <div class="card-body" style="min-height: 280px; max-height: 280px;">
+                                Server Status - <span id="serverStatus">Checking...</span>
+                                <br />
+                                <br />
+                                Printer -<br />
+                                <span id="printerStatus" style="font-size: 13px;">Checking...</span>
+                                <br />
+                                <br />
+                                App Version:
+                                <br />
+                                <span id="appVersion" style="font-size: 13px;">Loading...</span>
+                                <br />
+                                <br />
+                                MAC Address: <span id="macAddress">Loading...</span><br />
+                                IP Address: <span id="ipAddress">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>

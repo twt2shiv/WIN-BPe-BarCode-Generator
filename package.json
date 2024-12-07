@@ -1,6 +1,6 @@
 {
   "name": "bpe-barcode-generator",
-  "version": "1.0.30",
+  "version": "1.0.38",
   "description": "BharatPe - Barcode Generator",
   "main": "main.js",
   "scripts": {
@@ -36,8 +36,8 @@
     }
   },
   "repository": "https://github.com/twt2shiv/WIN-BPe-BarCode-Generator.git",
-  "keywords": [],
-  "author": "",
+  "keywords": ["mscorpres", "bharatpe", "barcode", "generator"],
+  "author": "MsCorpres Automation",
   "license": "ISC",
   "devDependencies": {
     "electron": "^25.9.8",
