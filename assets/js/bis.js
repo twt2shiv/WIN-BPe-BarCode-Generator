@@ -60,7 +60,7 @@ function createLabelHTML(product) {
     return template
         .replace('{lineFirst}', product.lineFirst)
         .replace('{lineSecond}', product.lineSecond)
-        .replace('{lineThird}', product.lineThird);
+        .replace('{lineThird}', product.lineThird); 
 }
 
 
