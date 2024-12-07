@@ -153,7 +153,7 @@ ipcMain.on('close-window', async () => {
       deleteFilesInDirectory(outputDir);
     });
 
-    app.quit(); 
+    app.quit();
   }
 });
 
@@ -177,10 +177,10 @@ autoUpdater.on('update-available', (info) => {
       type: 'info',
       buttons: ['Download', 'Cancel'],
       title: 'Update Available',
-      message: `A new version (${newVersion}) is available.\nDownloading now...`,
+      message: `A new version (${newVersion}) is available.\nWould you like to download it?`, // Updated message
     })
     .then((result) => {
-      if (result.response === 0) {
+      if (result.response === 0) { // Only start downloading if the user clicks 'Download'
         isDownloading = true;
         autoUpdater.downloadUpdate();
       } else {
@@ -188,6 +188,7 @@ autoUpdater.on('update-available', (info) => {
       }
     });
 });
+
 
 // Handle download progress
 autoUpdater.on('download-progress', (progress) => {
