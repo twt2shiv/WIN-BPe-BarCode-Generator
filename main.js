@@ -7,7 +7,6 @@ const axios = require('axios');
 
 let mainWindow; // Global variable for the main window
 let isDownloading = false; // Track whether a download is in progress
-let downloadStartTime = null;
 
 // Function to create a new window
 function createWindow() {
@@ -193,30 +192,9 @@ autoUpdater.on('update-available', (info) => {
 // Handle download progress
 autoUpdater.on('download-progress', (progress) => {
   if (mainWindow && mainWindow.webContents) {
-    const { percent, bytesPerSecond, totalBytes, transferredBytes } = progress;
-
-    if (!downloadStartTime) {
-      downloadStartTime = Date.now(); // Set the start time of the download
-    }
-
-    // Calculate elapsed time in seconds
-    const elapsedTime = Math.floor((Date.now() - downloadStartTime) / 1000);
-
-    // Calculate remaining time in seconds
-    const remainingTime = Math.floor((totalBytes - transferredBytes) / bytesPerSecond);
-
-    // Send the progress data to the renderer process (dashboard.html)
-    mainWindow.webContents.send('update-download-progress', {
-      percent,
-      elapsedTime,
-      remainingTime,
-      downloadSpeed: bytesPerSecond,
-      totalBytes,
-      transferredBytes
-    });
+    mainWindow.webContents.send('update-download-progress', progress);
   }
 });
-
 
 // Handle when the update is fully downloaded
 autoUpdater.on('update-downloaded', () => {
