@@ -6,7 +6,7 @@ const os = require('os');
 const axios = require('axios');
 
 let mainWindow; // Global variable for the main window
-
+let isDownloading = false; // Track whether a download is in progress
 
 // Function to create a new window
 function createWindow() {
@@ -60,110 +60,9 @@ ipcMain.handle('get-network-info', () => {
   return getNetworkInfo();
 });
 
-// Handle request to get printer information
-ipcMain.handle('get-printer-info', async () => {
-  try {
-    const printers = await mainWindow.webContents.getPrintersAsync();
-    // Returning the printer list or a default message
-    return printers.length > 0 ? printers[0].name : 'No Printers Found';
-  } catch (error) {
-    console.error('Failed to retrieve printers:', error);
-    throw new Error('Failed to retrieve printers');
-  }
-});
-
 // Handle request to get app version
 ipcMain.handle('get-app-version', () => {
   return app.getVersion();
-});
-
-ipcMain.handle('get-server-status', async () => {
-  try {
-    const response = await axios.get('https://api-bpe.mscapi.live', {
-      timeout: 30000, // 30-second timeout
-    });
-    return response.status === 200;
-  } catch (error) {
-    console.error('Server check failed:', error.message);
-    return false; 
-  }
-});
-
-// Handle print file request
-ipcMain.on('print-file', (event, filePath) => {
-  const printWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    show: true,
-    autoHideMenuBar: true,
-    title: 'Print Preview',
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  });
-
-  printWindow.loadFile(filePath);
-
-  printWindow.webContents.once('did-finish-load', () => {
-    printWindow.webContents.print({ silent: false, printBackground: true }, (success, errorType) => {
-      if (!success) {
-        console.error('Print failed:', errorType);
-        event.reply('print-result', { success: false, error: errorType });
-      } else {
-        console.log('Print job sent successfully.');
-        event.reply('print-result', { success: true });
-      }
-      printWindow.close();
-    });
-  });
-});
-
-
-// Show error message dialog
-ipcMain.on('show-error', (event, message) => {
-  dialog.showMessageBox(mainWindow, { type: 'error', buttons: ['OK'], title: 'Error', message });
-});
-
-// Show success message dialog
-ipcMain.on('show-success', (event, message) => {
-  dialog.showMessageBox(mainWindow, { type: 'info', buttons: ['OK'], title: 'Success', message });
-});
-
-// Auto update events
-autoUpdater.on('update-available', () => {
-  dialog.showMessageBox(mainWindow, {
-    type: 'info',
-    buttons: ['OK'],
-    title: 'Update Available',
-    message: 'A new version is available. Downloading now...',
-  });
-});
-
-autoUpdater.on('update-downloaded', () => {
-  dialog
-    .showMessageBox(mainWindow, {
-      type: 'info',
-      buttons: ['Restart', 'Later'],
-      title: 'Update Ready',
-      message: 'Update has been downloaded. It will be installed on restart.',
-    })
-    .then((result) => {
-      if (result.response === 0) {
-        autoUpdater.quitAndInstall();
-      }
-    });
-});
-
-autoUpdater.on('error', (error) => {
-  console.error('Auto-updater error:', error);
-  dialog.showErrorBox('Update Error', `An error occurred while checking for updates: ${error.message}`);
-});
-
-// Get output path for the app
-ipcMain.handle('get-output-path', () => {
-  const outputDir = path.join(app.getPath('userData'), 'output');
-  return outputDir; // Return the path to the renderer process
 });
 
 // Minimize window
@@ -187,15 +86,73 @@ ipcMain.on('close-window', async () => {
   }
 });
 
+// Auto-update events
+autoUpdater.on('update-available', () => {
+  if (isDownloading) {
+    console.log('Update is already downloading. Skipping new prompt.');
+    return;
+  }
+
+  dialog
+    .showMessageBox(mainWindow, {
+      type: 'info',
+      buttons: ['Download', 'Cancel'],
+      title: 'Update Available',
+      message: 'A new version is available. Do you want to download it now?',
+    })
+    .then((result) => {
+      if (result.response === 0) {
+        isDownloading = true; // Set the flag
+        autoUpdater.downloadUpdate(); // Start downloading the update
+      } else {
+        console.log('User declined the update download.');
+      }
+    });
+});
+
+// Handle download progress
+autoUpdater.on('download-progress', (progress) => {
+  if (mainWindow && mainWindow.webContents) {
+    mainWindow.webContents.send('update-download-progress', progress);
+  }
+});
+
+// Handle when the update is fully downloaded
+autoUpdater.on('update-downloaded', () => {
+  isDownloading = false; // Reset the flag when the download is complete
+
+  if (mainWindow && mainWindow.webContents) {
+    mainWindow.webContents.send('update-complete');
+  }
+
+  dialog
+    .showMessageBox(mainWindow, {
+      type: 'info',
+      buttons: ['Restart', 'Later'],
+      title: 'Update Ready',
+      message: 'Update has been downloaded. It will be installed on restart.',
+    })
+    .then((result) => {
+      if (result.response === 0) {
+        autoUpdater.quitAndInstall(); // Restart the app and install the update
+      }
+    });
+});
+
+// Handle errors
+autoUpdater.on('error', (error) => {
+  console.error('Auto-updater error:', error);
+  isDownloading = false; // Reset the flag if there's an error
+});
+
 // Initialize app and create the main window
 app.whenReady().then(() => {
   createWindow();
 
   autoUpdater.checkForUpdates();
-  setInterval(() => autoUpdater.checkForUpdates(), 180 * 1000); // Check for updates every 3 minutes
+  setInterval(() => autoUpdater.checkForUpdates(), 30 * 1000); // Check for updates every 30 seconds
 
   app.on('activate', () => {
-    // Open a new window only if no other windows are open
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
@@ -221,3 +178,4 @@ if (!gotTheLock) {
     }
   });
 }
+

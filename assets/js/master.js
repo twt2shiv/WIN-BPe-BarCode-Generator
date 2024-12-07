@@ -124,6 +124,7 @@ form.addEventListener("submit", async function (event) {
                 await downloadLabel(data.txn, labelHTML);
                 form.reset();
             } else {
+                console.error("API response:", apiResponse);
                 ipcRenderer.send('show-error', apiResponse.message || 'Unknown error');
             }
             toggleLoader(false);
