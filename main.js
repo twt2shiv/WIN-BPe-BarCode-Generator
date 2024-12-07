@@ -144,7 +144,7 @@ ipcMain.on('close-window', async () => {
     type: 'question',
     buttons: ['Cancel', 'YES - Please Close'],
     title: 'Confirm',
-    message: 'Are you sure? You want to close the application?\n',
+    message: 'Are you sure?\nYou want to close the application?\n',
   });
 
   if (response.response === 1) {
@@ -163,7 +163,7 @@ ipcMain.handle('get-output-path', () => {
 // Auto-update events
 autoUpdater.on('update-available', (info) => {
   if (isDownloading) {
-    console.log('Update is already downloading. Skipping new prompt.');
+    console.log('Update is already downloading.\nSkipping new prompt.');
     return;
   }
 
@@ -174,7 +174,7 @@ autoUpdater.on('update-available', (info) => {
       type: 'info',
       buttons: ['Download', 'Cancel'],
       title: 'Update Available',
-      message: `A new version [${newVersion}] is available.\nDownloading now...`,
+      message: `A new version (${newVersion}) is available.\nDownloading now...`,
     })
     .then((result) => {
       if (result.response === 0) {
@@ -206,7 +206,7 @@ autoUpdater.on('update-downloaded', () => {
       type: 'info',
       buttons: ['Restart', 'Later'],
       title: 'Update Ready',
-      message: 'Update has been downloaded. It will be installed on restart.',
+      message: 'Update has been downloaded.\nIt will be installed on restart.',
     })
     .then((result) => {
       if (result.response === 0) {
