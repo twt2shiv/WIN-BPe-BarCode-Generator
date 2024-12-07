@@ -1,6 +1,6 @@
 {
   "name": "bpe-barcode-generator",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "BharatPe - Barcode Generator",
   "main": "main.js",
   "scripts": {
@@ -33,11 +33,7 @@
       "owner": "twt2shiv",
       "repo": "WIN-BPe-BarCode-Generator",
       "releaseType": "release"
-    },
-    "artifactName": "BPe-Barcode-Setup-${version}.exe",
-    "extraResources": [
-      "assets"
-    ]
+    }
   },
   "repository": "https://github.com/twt2shiv/WIN-BPe-BarCode-Generator.git",
   "keywords": [],
