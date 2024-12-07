@@ -158,23 +158,25 @@ ipcMain.handle('get-output-path', () => {
 });
 
 // Auto-update events
-autoUpdater.on('update-available', () => {
+autoUpdater.on('update-available', (info) => {
   if (isDownloading) {
     console.log('Update is already downloading. Skipping new prompt.');
     return;
   }
+
+  const newVersion = info.version;  
 
   dialog
     .showMessageBox(mainWindow, {
       type: 'info',
       buttons: ['Download', 'Cancel'],
       title: 'Update Available',
-      message: 'A new version is available. Do you want to download it now?',
+      message: `A new version [${newVersion}] is available.\nDownloading now...`,
     })
     .then((result) => {
       if (result.response === 0) {
-        isDownloading = true; // Set the flag
-        autoUpdater.downloadUpdate(); // Start downloading the update
+        isDownloading = true; 
+        autoUpdater.downloadUpdate(); 
       } else {
         console.log('User declined the update download.');
       }
