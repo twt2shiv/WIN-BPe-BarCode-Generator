@@ -60,10 +60,76 @@ ipcMain.handle('get-network-info', () => {
   return getNetworkInfo();
 });
 
+// Handle request to get printer information
+ipcMain.handle('get-printer-info', async () => {
+  try {
+    const printers = await mainWindow.webContents.getPrintersAsync();
+    // Returning the printer list or a default message
+    return printers.length > 0 ? printers[0].name : 'No Printers Found';
+  } catch (error) {
+    console.error('Failed to retrieve printers:', error);
+    throw new Error('Failed to retrieve printers');
+  }
+});
+
 // Handle request to get app version
 ipcMain.handle('get-app-version', () => {
   return app.getVersion();
 });
+
+ipcMain.handle('get-server-status', async () => {
+  try {
+    const response = await axios.get('https://api-bpe.mscapi.live', {
+      timeout: 30000, // 30-second timeout
+    });
+    return response.status === 200;
+  } catch (error) {
+    console.error('Server check failed:', error.message);
+    return false;
+  }
+});
+
+// Handle print file request
+ipcMain.on('print-file', (event, filePath) => {
+  const printWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    show: true,
+    autoHideMenuBar: true,
+    title: 'Print Preview',
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+
+  printWindow.loadFile(filePath);
+
+  printWindow.webContents.once('did-finish-load', () => {
+    printWindow.webContents.print({ silent: false, printBackground: true }, (success, errorType) => {
+      if (!success) {
+        console.error('Print failed:', errorType);
+        event.reply('print-result', { success: false, error: errorType });
+      } else {
+        console.log('Print job sent successfully.');
+        event.reply('print-result', { success: true });
+      }
+      printWindow.close();
+    });
+  });
+});
+
+
+// Show error message dialog
+ipcMain.on('show-error', (event, message) => {
+  dialog.showMessageBox(mainWindow, { type: 'error', buttons: ['OK'], title: 'Error', message });
+});
+
+// Show success message dialog
+ipcMain.on('show-success', (event, message) => {
+  dialog.showMessageBox(mainWindow, { type: 'info', buttons: ['OK'], title: 'Success', message });
+});
+
 
 // Minimize window
 ipcMain.on('minimize-window', () => {
@@ -84,6 +150,11 @@ ipcMain.on('close-window', async () => {
   if (response.response === 1) {
     app.quit(); // Close the application if "OK" is selected
   }
+});
+
+ipcMain.handle('get-output-path', () => {
+  const outputDir = path.join(app.getPath('userData'), 'output');
+  return outputDir; // Return the path to the renderer process
 });
 
 // Auto-update events
