@@ -1,6 +1,6 @@
 {
   "name": "bpe-barcode-generator",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "BharatPe - Barcode Generator",
   "main": "main.js",
   "scripts": {
