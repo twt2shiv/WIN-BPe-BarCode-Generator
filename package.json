@@ -1,6 +1,6 @@
 {
   "name": "bpe-barcode-generator",
-  "version": "1.0.28",
+  "version": "1.0.26",
   "description": "BharatPe - Barcode Generator",
   "main": "main.js",
   "scripts": {
@@ -18,10 +18,6 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "assets/build/favicon.ico"
-    },
-    "dmg": {
-      "publisher": "MsCorpres Automation Private Limited",
       "icon": "assets/build/favicon.ico"
     },
     "nsis": {
