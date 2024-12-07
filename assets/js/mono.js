@@ -81,9 +81,9 @@ form.addEventListener("submit", async function (event) {
                 const data = apiResponse.data;
 
                 console.log("API Response Data:", data);
-                const serialBarcode = createBarcode(data.serialNo);
-                const simBarcode = createBarcode(data.iccid);
-                const qrBarcode = createBarcode(data.qrUrl);
+                const serialBarcode = createBarcode(data.serialNo, 2, 40);
+                const simBarcode = createBarcode(data.iccid, 2, 40);
+                const qrBarcode = createBarcode(data.qrUrl, 4, 40);
 
                 const labelHTML = await createLabelHTML(serialBarcode, simBarcode, qrBarcode, data);
 
@@ -111,12 +111,12 @@ function toggleLoader(isLoading) {
     }
 }
 
-function createBarcode(content) {
+function createBarcode(content, width , height) {
     const canvas = document.createElement('canvas');
     JsBarcode(canvas, content, {
         format: 'CODE128',
-        width: 2,
-        height: 40,
+        width: width,
+        height: height,
         displayValue: false,
         margin: 0,
     });
