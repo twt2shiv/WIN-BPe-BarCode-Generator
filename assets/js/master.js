@@ -169,11 +169,11 @@ function createQRCode(data) {
         });
 
         QRCode.toDataURL(qrData, {
-            width: 200,  
-            margin: 1   
+            width: 200,
+            margin: 1
         }, function (err, url) {
             if (err) reject(err);
-            resolve(url);  
+            resolve(url);
         });
     });
 }
@@ -194,7 +194,8 @@ async function createLabelHTML(data) {
         .replace('{boxDate}', data.txnDt)
         .replace('{boxBarcode}', boxBarcode)
         .replace('{boxQRcode}', boxQRCode).
-        replace('{boxNumber}', data.boxNumber);
+        replace('{boxNumber}', data.boxNumber).
+        replace('{lotSize}', data.lotLength);
 }
 
 async function downloadLabel(fileName, labelHTML) {
