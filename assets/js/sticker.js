@@ -73,8 +73,7 @@ function createBarcode(number) {
 
 // Function to fetch product data
 async function fetchProductData(number) {
-    // const response = await fetch(`http://localhost:3005/win/QR/sticker/${number}`); // Dev
-    const response = await fetch(`https://api-bpe.mscapi.live/win/QR/sticker/${number}`); // PROD
+    const response = await fetch(`https://api-bpe.mscapi.live/win/QR/sticker/${number}`); 
 
     const data = await response.json();
 
@@ -100,8 +99,6 @@ async function downloadLabel(fileName, labelHTML) {
     try {
         const outputDir = await ipcRenderer.invoke('get-output-path');
         const filePath = path.join(outputDir, `${fileName}_sticker-label.html`);
-
-        console.log("==============", filePath);
 
         // Ensure the output directory exists
         if (!fs.existsSync(outputDir)) {

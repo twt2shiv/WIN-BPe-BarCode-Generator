@@ -108,10 +108,8 @@ ipcMain.on('print-file', (event, filePath) => {
   printWindow.webContents.once('did-finish-load', () => {
     printWindow.webContents.print({ silent: false, printBackground: true }, (success, errorType) => {
       if (!success) {
-        console.error('Print failed:', errorType);
         event.reply('print-result', { success: false, error: errorType });
       } else {
-        console.log('Print job sent successfully.');
         event.reply('print-result', { success: true });
       }
       printWindow.close();

@@ -198,7 +198,6 @@ async function createLabelHTML(data) {
 }
 
 async function downloadLabel(fileName, labelHTML) {
-    console.log("labelHTML", fileName);
     try {
         const outputDir = await ipcRenderer.invoke('get-output-path');
         const filePath = path.join(outputDir, `${fileName}_master-label.html`);

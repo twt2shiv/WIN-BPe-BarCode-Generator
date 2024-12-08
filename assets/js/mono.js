@@ -80,7 +80,6 @@ form.addEventListener("submit", async function (event) {
             if (apiResponse.success && apiResponse.data.isOK) {
                 const data = apiResponse.data;
 
-                console.log("API Response Data:", data);
                 const serialBarcode = createBarcode(data.serialNo, 2, 40);
                 const simBarcode = createBarcode(data.iccid, 2, 40);
                 const qrBarcode = createBarcode(data.qrUrl, 4, 40);
@@ -125,7 +124,6 @@ function createBarcode(content, width , height) {
 }
 
 async function createLabelHTML(serialBarcode, simBarcode, qrBarcode, data) {
-    console.log("data", data);
     const templatePath = path.join(__dirname, './../template', 'monoSticker.html');
     const template = await fs.promises.readFile(templatePath, 'utf-8');
     return template

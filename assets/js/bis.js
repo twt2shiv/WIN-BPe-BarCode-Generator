@@ -45,8 +45,7 @@ async function generateSticker(number) {
 
 // Function to fetch IMEI data
 async function getIMEIdataFromServer(number) {
-    // const response = await fetch(`http://localhost:3005/win/QR/bis/${number}`); // Dev
-    const response = await fetch(`https://api-bpe.mscapi.live/win/QR/bis/${number}`); // PROD
+    const response = await fetch(`https://api-bpe.mscapi.live/win/QR/bis/${number}`); 
 
     const data = await response.json();
 

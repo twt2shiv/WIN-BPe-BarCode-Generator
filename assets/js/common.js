@@ -9,7 +9,6 @@ ipcRenderer.invoke('get-app-version').then((version) => {
 
 // Fetch and update server status
 ipcRenderer.invoke('get-server-status').then((status) => {
-    console.log('Server status:', status);
     document.getElementById('serverStatus').innerText = status ? 'Online' : 'Offline';
 }).catch(() => {
     document.getElementById('serverStatus').innerText = 'Offline';
@@ -19,7 +18,6 @@ ipcRenderer.invoke('get-server-status').then((status) => {
 // Fetch and update printer status
 ipcRenderer.invoke('get-printer-info')
     .then((printer) => {
-        console.log('Printer status:', printer);
         document.getElementById('printerStatus').innerText = printer || 'NA';
     })
     .catch((error) => {
@@ -49,35 +47,16 @@ ipcRenderer.invoke('get-network-info').then((networkInfo) => {
     document.getElementById('ipAddress').innerText = 'N/A';
 });
 
-// function showProgress() {
-//     const progressBar = document.getElementById('downloadProgress');
-//     progressBar.style.display = 'block'; 
-// }
 
-// // Update the progress bar
-// function updateProgress(percent) {
-//     const progressBar = document.getElementById('downloadProgress');
-//     progressBar.style.width = `${percent}%`;
-//     progressBar.setAttribute('aria-valuenow', percent); 
-// }
+function updateTaskbarProgress(percent) {
+    if (percent >= 0 && percent <= 100) {
+        ipcRenderer.send('set-progress-bar', percent / 100); // Pass value between 0 and 1
+    } else {
+        ipcRenderer.send('set-progress-bar', -1); // Remove the progress bar
+    }
+}
 
-// // Hide the progress bar when the download is complete
-// function hideProgress() {
-//     const progressBar = document.getElementById('downloadProgress');
-//     progressBar.style.display = 'none'; 
-// }
 
-// // Listen for progress updates from the main process
-// ipcRenderer.on('update-download-progress', (event, progress) => {
-//     const percent = Math.round(progress.percent); 
-//     showProgress(); 
-//     updateProgress(percent);
-// });
-
-// // Listen for the completion event
-// ipcRenderer.on('update-complete', () => {
-//     hideProgress(); 
-// });
 
 let startTime;  // To track the start time
 
@@ -114,6 +93,9 @@ function updateProgress(percent, bytesPerSecond, transferred, total) {
     // Update progress info
     document.getElementById('totalDownloadProgress').innerText = `${percent.toFixed(2)}%`;
     timeTrack.innerText = `Elapsed: ${elapsedTime.toFixed(2)}s | Remaining: ${estimatedTime.toFixed(2)}s`;
+
+    // Update taskbar progress
+    updateTaskbarProgress(percent);
 }
 
 
@@ -131,5 +113,21 @@ ipcRenderer.on('update-download-progress', (event, progress) => {
 // Listen for the completion event
 ipcRenderer.on('update-complete', () => {
     hideProgress();
+    updateTaskbarProgress(-1);
     startTime = null;
 });
+
+// Function to update the body class based on the network status
+function updateBodyStatus() {
+    const body = document.body;
+    if (navigator.onLine) {
+      body.classList.remove('disabled'); 
+    } else {
+      body.classList.add('disabled');
+    }
+  }
+  
+  window.addEventListener('online', updateBodyStatus);
+  window.addEventListener('offline', updateBodyStatus);
+  
+  updateBodyStatus();
