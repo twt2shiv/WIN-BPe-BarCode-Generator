@@ -80,70 +80,56 @@ ipcRenderer.invoke('get-network-info').then((networkInfo) => {
 // });
 
 let startTime;  // To track the start time
-let fileSize = 0; // The total file size
-let downloadedSize = 0; // Track the size downloaded so far
 
 function showProgress() {
-    const progressBar = document.getElementById('downloadProgress');
-    progressBar.style.display = 'block'; 
+    const dashboardProgress = document.getElementById('dashboard-progress');
+    const mainDashboard = document.getElementById('main-dashboard');
+    
+    dashboardProgress.style.display = 'block'; 
+    mainDashboard.style.display = 'none'; 
 }
+
+function hideProgress() {
+    const dashboardProgress = document.getElementById('dashboard-progress');
+    const mainDashboard = document.getElementById('main-dashboard');
+
+    dashboardProgress.style.display = 'none'; 
+    mainDashboard.style.display = 'block'; 
+}
+
 
 // Update the progress bar and log data
 function updateProgress(percent, bytesPerSecond, transferred, total) {
-    if (isNaN(bytesPerSecond) || isNaN(total) || isNaN(transferred)) {
-        console.error('Invalid data:', bytesPerSecond, total, transferred);
-        return; // Exit if data is invalid
-    }
-
     const progressBar = document.getElementById('downloadProgress');
+    const timeTrack = document.getElementById('timeTrack');
+
     progressBar.style.width = `${percent}%`;
     progressBar.setAttribute('aria-valuenow', percent); 
 
-    // Calculate time elapsed and estimated time
-    const elapsedTime = (Date.now() - startTime) / 1000; // Time in seconds
+    // Calculate time elapsed and estimated remaining time
+    const elapsedTime = (Date.now() - startTime) / 1000; // in seconds
     const remainingBytes = total - transferred;
-
-    // Estimate remaining time in seconds based on download speed
     const estimatedTime = bytesPerSecond > 0 ? remainingBytes / bytesPerSecond : 0;
 
-    console.log(`Progress: ${percent.toFixed(2)}%`);
-    console.log(`Time elapsed: ${elapsedTime.toFixed(2)} seconds`);
-    console.log(`Estimated time remaining: ${estimatedTime.toFixed(2)} seconds`);
+    // Update progress info
+    document.getElementById('totalDownloadProgress').innerText = `${percent.toFixed(2)}%`;
+    timeTrack.innerText = `Elapsed: ${elapsedTime.toFixed(2)}s | Remaining: ${estimatedTime.toFixed(2)}s`;
 }
 
-// Hide the progress bar when the download is complete
-function hideProgress() {
-    const progressBar = document.getElementById('downloadProgress');
-    progressBar.style.display = 'none'; 
-}
 
 // Listen for progress updates from the main process
 ipcRenderer.on('update-download-progress', (event, progress) => {
-    if (!progress || typeof progress !== 'object') {
-        console.error('Invalid progress data:', progress);
-        return; // Exit if progress is invalid
-    }
+    if (!startTime) startTime = Date.now(); // Initialize start time if not set
 
-    if (!startTime) {
-        startTime = Date.now();  // Start time when download begins
-    }
-
-    // Log progress data to debug
-    console.log('Received progress data:', progress);
-
-    // Extract the data
-    const { bytesPerSecond, delta, percent, total, transferred } = progress;
-
-    if (total > 0 && transferred <= total) {
+    const { bytesPerSecond, percent, total, transferred } = progress;
+    if (total > 0) {
         showProgress();
         updateProgress(percent, bytesPerSecond, transferred, total);
-    } else {
-        console.warn('Invalid download progress data:', progress);
     }
 });
 
 // Listen for the completion event
 ipcRenderer.on('update-complete', () => {
     hideProgress();
-    console.log('Download complete!');
+    startTime = null;
 });
