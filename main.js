@@ -94,7 +94,7 @@ ipcMain.on('print-file', (event, filePath) => {
   const printWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    show: true,
+    show: false,
     autoHideMenuBar: true,
     title: 'Print Preview',
     webPreferences: {
@@ -153,7 +153,7 @@ ipcMain.on('close-window', async () => {
       deleteFilesInDirectory(outputDir);
     });
 
-    app.quit();
+    app.quit(); 
   }
 });
 
@@ -177,10 +177,10 @@ autoUpdater.on('update-available', (info) => {
       type: 'info',
       buttons: ['Download', 'Cancel'],
       title: 'Update Available',
-      message: `A new version (${newVersion}) is available.\nWould you like to download it?`, // Updated message
+      message: `A new version (${newVersion}) is available.\nDownloading now...`,
     })
     .then((result) => {
-      if (result.response === 0) { // Only start downloading if the user clicks 'Download'
+      if (result.response === 0) {
         isDownloading = true;
         autoUpdater.downloadUpdate();
       } else {
@@ -188,7 +188,6 @@ autoUpdater.on('update-available', (info) => {
       }
     });
 });
-
 
 // Handle download progress
 autoUpdater.on('download-progress', (progress) => {
