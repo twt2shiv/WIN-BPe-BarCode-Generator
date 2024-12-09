@@ -2,6 +2,7 @@ const JsBarcode = require('jsbarcode');
 const { ipcRenderer } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const QRCode = require('qrcode');
 
 const form = document.getElementById("monoForm");
 const generateButton = document.getElementById("generateMonoBarcode");
@@ -82,7 +83,7 @@ form.addEventListener("submit", async function (event) {
 
                 const serialBarcode = createBarcode(data.serialNo, 2, 40);
                 const simBarcode = createBarcode(data.iccid, 2, 40);
-                const qrBarcode = createBarcode(data.qrUrl, 4, 40);
+                const qrBarcode = await createQRCode(data.qrUrl);
 
                 const labelHTML = await createLabelHTML(serialBarcode, simBarcode, qrBarcode, data);
 
@@ -110,7 +111,7 @@ function toggleLoader(isLoading) {
     }
 }
 
-function createBarcode(content, width , height) {
+function createBarcode(content, width, height) {
     const canvas = document.createElement('canvas');
     JsBarcode(canvas, content, {
         format: 'CODE128',
@@ -123,13 +124,27 @@ function createBarcode(content, width , height) {
     return canvas.toDataURL();
 }
 
+async function createQRCode(content) {
+    try {
+        return await QRCode.toDataURL(content, {
+            errorCorrectionLevel: 'H',
+            width: 100
+        });
+    } catch (error) {
+        console.error("Error generating QR Code:", error);
+        throw error;
+    }
+}
+
 async function createLabelHTML(serialBarcode, simBarcode, qrBarcode, data) {
     const templatePath = path.join(__dirname, './../template', 'monoSticker.html');
     const template = await fs.promises.readFile(templatePath, 'utf-8');
+
+
     return template
         .replace('{serialBarcode}', serialBarcode)
         .replace('{simBarcode}', simBarcode)
-        .replace('{qrBarcode}', qrBarcode)
+        .replace('{qrcode}', qrBarcode)
         .replace('{serialNo}', data.serialNo)
         .replace('{simNumber}', data.iccid)
         .replace('{operator}', data.operator)
