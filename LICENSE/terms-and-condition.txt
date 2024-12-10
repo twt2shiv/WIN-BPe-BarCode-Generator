@@ -3,7 +3,7 @@
 ==============================
 
 ###1. **Acceptance of Terms**
-- By using the BPe-Barcode for generating barcodes, stickers, QR codes, and other related functionalities, you agree to comply with and be bound by the following terms and conditions. If you do not agree with these terms, please do not use the tool.
+- By using the Refurb-Plus for generating barcodes, stickers, QR codes, and other related functionalities, you agree to comply with and be bound by the following terms and conditions. If you do not agree with these terms, please do not use the tool.
 
 
 ### 2. **Tool Usage**
