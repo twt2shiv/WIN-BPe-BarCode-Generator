@@ -128,7 +128,7 @@ async function createQRCode(content) {
     try {
         return await QRCode.toDataURL(content, {
             errorCorrectionLevel: 'H',
-            width: 100
+            scale: 2
         });
     } catch (error) {
         console.error("Error generating QR Code:", error);

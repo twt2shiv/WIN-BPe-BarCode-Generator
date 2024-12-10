@@ -1,7 +1,7 @@
 {
   "name": "bpe-barcode-generator",
-  "version": "1.0.51",
-  "description": "BharatPe - Barcode Generator",
+  "version": "1.0.52",
+  "description": "Refurb-Plus - Barcode Generator",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -11,14 +11,14 @@
   },
   "build": {
     "appId": "com.bpe-barcode-generator.mscorpres",
-    "productName": "BPe-Barcode",
+    "productName": "Refurb-Plus",
     "copyright": "Copyright © 2024",
     "directories": {
       "buildResources": "build"
     },
     "win": {
       "target": "nsis",
-      "icon": "assets/build/favicon.ico"
+      "icon": "assets/build/favicon-1.ico"
     },
     "nsis": {
       "oneClick": false,
@@ -36,7 +36,7 @@
     }
   },
   "repository": "https://github.com/twt2shiv/WIN-BPe-BarCode-Generator.git",
-  "keywords": ["mscorpres", "bharatpe", "barcode", "generator"],
+  "keywords": ["mscorpres", "bharatpe", "barcode", "generator", "Refurb-Plus", "Refurb", "Plus"],
   "author": "MsCorpres Automation",
   "license": "ISC",
   "devDependencies": {

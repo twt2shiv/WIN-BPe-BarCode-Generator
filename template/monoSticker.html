@@ -17,7 +17,6 @@
 
         body {
             height: 100vh;
-            display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 500;
@@ -46,18 +45,20 @@
 
 <body>
     <div class="card">
-        <div style="margin: 5px 0 5px 0;">
+        <div style="margin: 35px 0 5px 0;">
             <img src="{serialBarcode}" />
             <p>{serialNo}</p>
         </div>
 
-        <div style="margin-bottom: 5px;">
+        <div style="margin-top: 15px;">
             <img src="{simBarcode}" />
             <p>SIM No.- {simNumber}</p>
             <p>Operator - {operator}</p>
         </div>
+    </div>
+    <div class="card">
         <div>
-            <img src="{qrcode}" style="width: 35px; height: auto;"/>
+            <img src="{qrcode}" style="width: 90%;height: auto; margin-top: 15px;"/>
             <p>QR</p>
         </div>
     </div>
