@@ -115,8 +115,6 @@ form.addEventListener("submit", async function (event) {
             });
 
             const apiResponse = await response.json();
-
-            createBarcode
             if (apiResponse.success && apiResponse.data.isOK) {
                 const data = apiResponse.data;
                 const labelHTML = await createLabelHTML(data);
@@ -179,7 +177,7 @@ function createQRCode(data) {
 }
 
 async function createLabelHTML(data) {
-    const boxBarcode = createBarcode(data.boxNumber);
+    // const boxBarcode = createBarcode(data.boxNumber);
     const boxQRCode = await createQRCode(data);
 
     const templatePath = path.join(__dirname, './../template', 'masterSticker.html');
@@ -192,7 +190,7 @@ async function createLabelHTML(data) {
         .replace('{simStatus}', data.simCardIncluded)
         .replace('{simOperator}', data.operator)
         .replace('{boxDate}', data.txnDt)
-        .replace('{boxBarcode}', boxBarcode)
+        // .replace('{boxBarcode}', boxBarcode)
         .replace('{boxQRcode}', boxQRCode).
         replace('{boxNumber}', data.boxNumber).
         replace('{lotSize}', data.lotLength);
