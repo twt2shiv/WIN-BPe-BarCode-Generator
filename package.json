@@ -1,6 +1,6 @@
 {
   "name": "bpe-barcode-generator",
-  "version": "1.0.55",
+  "version": "1.0.56",
   "description": "Refurb-Plus - Barcode Generator",
   "main": "main.js",
   "scripts": {
