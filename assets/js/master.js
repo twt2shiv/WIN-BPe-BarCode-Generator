@@ -161,7 +161,7 @@ function createBarcode(content) {
 
 function createQRCode(data) {
     return new Promise((resolve, reject) => {
-        const qrData = data.join('\n');
+        const qrData = data.join('\n\r');
 
         QRCode.toDataURL(qrData, {
             width: 200,
