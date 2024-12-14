@@ -161,25 +161,24 @@ function createBarcode(content) {
 
 function createQRCode(data) {
     return new Promise((resolve, reject) => {
-        const qrData = JSON.stringify({
-            imeis: data.imeis,
-            serials: data.serials
-        });
+        const qrData = data.join('\n');
 
         QRCode.toDataURL(qrData, {
             width: 200,
             margin: 1
         }, function (err, url) {
-            if (err) reject(err);
+            if (err) {
+                console.error("QR Code generation error:", err);
+                reject(err);
+            }
             resolve(url);
         });
     });
 }
 
-async function createLabelHTML(data) {
-    // const boxBarcode = createBarcode(data.boxNumber);
-    const boxQRCode = await createQRCode(data);
 
+async function createLabelHTML(data) {
+    const boxQRCode = await createQRCode(data.serials);
     const templatePath = path.join(__dirname, './../template', 'masterSticker.html');
     const template = await fs.promises.readFile(templatePath, 'utf-8');
     return template
@@ -190,10 +189,9 @@ async function createLabelHTML(data) {
         .replace('{simStatus}', data.simCardIncluded)
         .replace('{simOperator}', data.operator)
         .replace('{boxDate}', data.txnDt)
-        // .replace('{boxBarcode}', boxBarcode)
-        .replace('{boxQRcode}', boxQRCode).
-        replace('{boxNumber}', data.boxNumber).
-        replace('{lotSize}', data.lotLength);
+        .replace('{boxQRcode}', boxQRCode)
+        .replace('{boxNumber}', data.boxNumber)
+        .replace('{lotSize}', data.lotLength);
 }
 
 async function downloadLabel(fileName, labelHTML) {
