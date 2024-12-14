@@ -9,7 +9,7 @@ const form = document.getElementById("masterForm");
 const generateButton = document.getElementById("generateMasterQRcode");
 const cancelButton = document.getElementById("cancelForm");
 const serialInput = document.getElementById("serialNumber");
-const serialList = document.getElementById("serialList");
+const serialList = document.getElementById("serialContainer");
 const totalScanned = document.getElementById("totalScanned");
 
 const lotSize = 30;

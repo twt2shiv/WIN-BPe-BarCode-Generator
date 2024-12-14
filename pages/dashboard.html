@@ -52,9 +52,7 @@
 
         <div id="main-dashboard" style="display: block;">
             <div class="sh-pagetitle">
-                <div class="input-group">
-                    <input type="search" class="form-control" placeholder="Search">
-                </div>
+                <span id="appVersion" style="font-size: 13px;">Loading...</span>
                 <div class="sh-pagetitle-left">
                     <div class="sh-pagetitle-icon"><i class="icon fa fa-home"></i></div>
                     <div class="sh-pagetitle-title">
@@ -92,7 +90,7 @@
                                     </div>
                                 </a>
                             </div>
-                            <div class="col-sm-6 col-6 mg-t-10 mg-md-t-0">
+                            <div class="col-sm-6 mg-t-10 mg-md-t-0">
                                 <a href="./master.html" class="shortcut-icon">
                                     <div>
                                         <i class="icon fa fa-qrcode"></i>
@@ -108,7 +106,33 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="card bd-primary">
+                        <div class="row">
+                            <div class="col-sm-6 disabled">
+                                <a class="shortcut-icon">
+                                    <div>
+                                        <!-- <i class="icon fa fa-chain-broken"></i> -->
+                                        <span></span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-sm-6 disabled">
+                                <a class="shortcut-icon">
+                                    <div>
+                                        <!-- <i class="icon fa fa-chain-broken"></i> -->
+                                        <span></span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-sm-6 mg-t-10 mg-md-t-0">
+                                <a href="./excelDownload.html" class="shortcut-icon">
+                                    <div>
+                                        <i class="icon fa fa-file-excel-o"></i>
+                                        <span>SERIAL XLSL</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- <div class="card bd-primary">
                             <div class="card-header bg-primary tx-white">General Information
                             </div>
                             <div class="card-body" style="min-height: 280px; max-height: 280px;">
@@ -127,7 +151,7 @@
                                 MAC Address: <span id="macAddress">Loading...</span><br />
                                 IP Address: <span id="ipAddress">Loading...</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

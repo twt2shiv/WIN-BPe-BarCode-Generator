@@ -161,7 +161,7 @@ async function downloadLabel(fileName, labelHTML) {
 
         await fs.promises.writeFile(filePath, labelHTML);
         printGeneratedFile(filePath);
-        form.reset();
+        form.reset(); serialNumber.focus();
         return;
     } catch (err) {
         console.error('An error occurred while saving the sticker:', err);

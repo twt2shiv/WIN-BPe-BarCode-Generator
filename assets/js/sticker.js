@@ -112,6 +112,7 @@ async function downloadLabel(fileName, labelHTML) {
         // Automatically print the generated file
         printGeneratedFile(filePath);
         inputNumber.value = '';
+        inputNumber.focus();
         return;
     } catch (err) {
         console.error('an error occured while saving sticker:', err);

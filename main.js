@@ -151,7 +151,7 @@ ipcMain.on('close-window', async () => {
       deleteFilesInDirectory(outputDir);
     });
 
-    app.quit(); 
+    app.quit();
   }
 });
 
@@ -271,3 +271,19 @@ const deleteFilesInDirectory = (dirPath) => {
     console.error('Error deleting files:', err);
   }
 };
+
+
+// Handle save-excel message
+ipcMain.on('save-excel', (event, { fileName, fileBuffer }) => {
+  dialog.showSaveDialog({
+    defaultPath: fileName,
+    filters: [{ name: 'Excel Files', extensions: ['xlsx'] }],
+  }).then(({ filePath }) => {
+    if (filePath) {
+      fs.writeFileSync(filePath, fileBuffer); // Save the file
+      event.sender.send('show-success', `Excel file saved: ${filePath}`);
+    }
+  }).catch(err => {
+    event.sender.send('show-error', `Error saving file: ${err.message}`);
+  });
+});

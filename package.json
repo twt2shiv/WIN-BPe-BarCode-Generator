@@ -1,6 +1,6 @@
 {
   "name": "bpe-barcode-generator",
-  "version": "1.0.57",
+  "version": "1.0.58",
   "description": "Refurb-Plus - Barcode Generator",
   "main": "main.js",
   "scripts": {
@@ -36,7 +36,15 @@
     }
   },
   "repository": "https://github.com/twt2shiv/WIN-BPe-BarCode-Generator.git",
-  "keywords": ["mscorpres", "bharatpe", "barcode", "generator", "Refurb-Plus", "Refurb", "Plus"],
+  "keywords": [
+    "mscorpres",
+    "bharatpe",
+    "barcode",
+    "generator",
+    "Refurb-Plus",
+    "Refurb",
+    "Plus"
+  ],
   "author": "MsCorpres Automation",
   "license": "ISC",
   "devDependencies": {
@@ -48,6 +56,7 @@
     "axios": "^1.7.8",
     "electron-updater": "^6.3.9",
     "jsbarcode": "^3.11.6",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "xlsx": "^0.18.5"
   }
 }

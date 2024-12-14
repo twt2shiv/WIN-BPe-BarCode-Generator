@@ -80,6 +80,7 @@ async function downloadLabel(fileName, labelHTML) {
         // Automatically print the generated file
         printGeneratedFile(filePath);
         bisIMEINumber.value = '';
+        bisIMEINumber.focus();
         return;
     } catch (err) {
         console.error('an error occured while saving BIS sticker:', err);
