@@ -65,7 +65,11 @@ form.addEventListener("submit", async function (event) {
             const response = await fetch(`https://api-bpe.mscapi.live/win/QR/mono/${formData.serialNumber}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'x-token': localStorage.getItem('authToken'),
+                    'x-user-id': localStorage.getItem('userID'),
+                    'x-mac-address': localStorage.getItem('userMAC'),
+                    'x-ip-address': localStorage.getItem('userIP')
                 },
                 body: JSON.stringify({
                     serial: formData.serialNumber,

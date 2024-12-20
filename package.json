@@ -1,8 +1,9 @@
 {
-  "name": "bpe-barcode-generator",
-  "version": "1.0.60",
+  "name": "Refurb-Plus",
+  "version": "1.0.58",
   "description": "Refurb-Plus - Barcode Generator",
   "main": "main.js",
+  "productName": "Refurb-Plus",
   "scripts": {
     "start": "electron-forge start",
     "dev": "nodemon --watch main.js --exec \"electron .\"",
@@ -26,7 +27,8 @@
       "perMachine": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "license": "LICENSE/terms-and-condition.txt"
+      "license": "LICENSE/terms-and-condition.txt",
+      "installerIcon": "assets/build/favicon-1.ico"
     },
     "publish": {
       "provider": "github",
@@ -48,6 +50,7 @@
   "author": "MsCorpres Automation",
   "license": "ISC",
   "devDependencies": {
+    "@electron-forge/cli": "^7.6.0",
     "electron": "^25.9.8",
     "electron-builder": "^25.1.8",
     "nodemon": "^3.1.7"

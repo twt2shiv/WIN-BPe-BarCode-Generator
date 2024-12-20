@@ -111,6 +111,10 @@ form.addEventListener("submit", async function (event) {
         const response = await fetch("https://api-bpe.mscapi.live/win/QR/master", {
             method: 'POST',
             headers: {
+                'x-token': localStorage.getItem('authToken'),
+                'x-user-id': localStorage.getItem('userID'),
+                'x-mac-address': localStorage.getItem('userMAC'),
+                'x-ip-address': localStorage.getItem('userIP'),
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({

@@ -17,7 +17,9 @@ updateBodyStatus();
 
 // Fetch and update app version
 ipcRenderer.invoke('get-app-version').then((version) => {
-  document.getElementById('appVersion').innerText = 'v:'+version || 'v: Unknown';
+  setTimeout(() => {
+    document.getElementById('appVersion').innerText = 'v: ' + version;
+  }, 500);
 }).catch(() => {
   document.getElementById('appVersion').innerText = 'v: Unknown';
 });
@@ -37,15 +39,25 @@ const authToken = localStorage.getItem('authToken');
 const currentPage = window.location.pathname.split('/').pop();
 
 if (!authToken && currentPage !== 'login.html') {
-  window.location.replace('login.html');
-} else if (authToken && currentPage === 'login.html') {
-  window.location.replace('dashboard.html');
+  console.log('Redirecting to login page...');
+  // window.location.replace('login.htmll');
 } else if (authToken) {
+  console.log('User is logged in');
   const userName = localStorage.getItem('userName');
   if (userName) {
-    document.getElementById('appUserName').innerText = "LoggedIn as :"+userName;
+    console.log('User name:', userName);
+    setTimeout(() => {
+      document.getElementById('appUserName').innerText = "LoggedIn as :" + userName;
+    }, 500);
   } else {
-    localStorage.removeItem('authToken');
+    console.log('User name not found');
+    localStorage.clear();
     window.location.replace('login.html');
   }
 }
+
+ipcRenderer.on('save-network-info', (event, data) => {
+  const { macAddress, ipAddress } = data;
+  localStorage.setItem('userIP', ipAddress);
+  localStorage.setItem('userMAC', macAddress);
+});

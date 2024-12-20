@@ -1,49 +1,49 @@
-### 1. **Acceptance of Terms**
+### 1. Acceptance of Terms
 
 ==============================
 
-###1. **Acceptance of Terms**
+###1. Acceptance of Terms
 - By using the Refurb-Plus for generating barcodes, stickers, QR codes, and other related functionalities, you agree to comply with and be bound by the following terms and conditions. If you do not agree with these terms, please do not use the tool.
 
 
-### 2. **Tool Usage**
+### 2. Tool Usage
 - The tool is intended solely for the purpose of generating barcodes, device barcodes, stickers, BIS stickers, and Master QR Codes.
 - You agree to use the tool only for lawful purposes and in accordance with all applicable laws and regulations.
 
 
-### 3. **Intellectual Property**
+### 3. Intellectual Property
 - All content, features, and functionality within the tool, including but not limited to software, logos, trademarks, and other intellectual property, are owned by MsCorpres Automation Private Limited and are protected by copyright, trademark, and other intellectual property laws.
 Users are granted a non-exclusive, non-transferable license to use the tool for its intended purposes, and all rights not expressly granted in these terms are reserved by MsCorpres Automation Private Limited.
 
 
-### 4. **Privacy and Data Collection**
+### 4. Privacy and Data Collection
 - The tool may collect user data for the purpose of improving functionality and user experience. Any collected data will be handled in accordance with MsCorpres Automation Private Limited's Privacy Policy.
 Users are responsible for ensuring that any data they input, including but not limited to barcode details, is legally compliant.
 
 
-### 5. **Limitations of Liability**
+### 5. Limitations of Liability
 - MsCorpres Automation Private Limited makes no warranties or representations regarding the accuracy, completeness, or reliability of the generated outputs. Users agree that they use the tool at their own risk.
 - MsCorpres Automation Private Limited will not be liable for any direct, indirect, incidental, or consequential damages arising from the use or inability to use the tool.
 
 
-### 6. **License Restrictions**
+### 6. License Restrictions
 - You may not modify, distribute, or reverse-engineer the software behind the tool.
 - You may not use the tool to generate barcodes, stickers, or QR codes that infringe upon any third-party intellectual property rights or violate any laws.
 
 
-### 7. **Termination**
+### 7. Termination
 - MsCorpres Automation Private Limited reserves the right to suspend or terminate your access to the tool at any time, for any reason, including but not limited to a breach of these terms.
 
-### 8. **Changes to the Terms**
+### 8. Changes to the Terms
 - MsCorpres Automation Private Limited reserves the right to update or modify these terms and conditions at any time. Users will be notified of significant changes and should review the terms periodically.
 
 
-### 9. **Governing Law**
+### 9. Governing Law
 - These terms shall be governed by and construed in accordance with the laws of Noida Jurisdiction, without regard to its conflict of law principles.
 
 
 
-### 10. **Contact Us**
+### 10. Contact Us
 - If you have any questions or concerns about these Terms and Conditions, please contact us at:
 
 - Email: iot@mscorpres.in

@@ -2,6 +2,17 @@ const { ipcRenderer } = require('electron');
 
 const loginForm = document.querySelector('form');
 
+// Minimize window functionality
+document.getElementById('minimize-link').addEventListener('click', () => {
+    ipcRenderer.send('minimize-window');
+  });
+  
+  // Close window functionality
+  document.getElementById('close-link').addEventListener('click', () => {
+    ipcRenderer.send('close-window');
+  });
+
+
 loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -36,7 +47,7 @@ loginForm.addEventListener('submit', async (event) => {
             localStorage.setItem('userName', result.data.username);
             localStorage.setItem('userID', result.data.crn_id);
 
-            ipcRenderer.send('redirect-to-dashboard');
+            ipcRenderer.send('redirect-to-dashboard'); 
         } else {
             ipcRenderer.send("show-error", result.message);
         }
@@ -47,3 +58,5 @@ loginForm.addEventListener('submit', async (event) => {
         submitButton.textContent = originalText;
     }
 });
+
+

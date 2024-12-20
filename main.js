@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Notification } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
@@ -6,7 +6,6 @@ const os = require('os');
 const axios = require('axios');
 
 let mainWindow; // Global variable for the main window
-let isDownloading = false; // Track whether a download is in progress
 
 // Function to create a new window
 function createWindow() {
@@ -15,12 +14,12 @@ function createWindow() {
   }
 
   mainWindow = new BrowserWindow({
-    width: 760,
-    height: 500,
+    width: 850,
+    height: 550,
     resizable: false,
     autoHideMenuBar: true,
     frame: false,
-    title: "Loading...",
+    title: "Refurb-Plus",
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -52,6 +51,7 @@ function getNetworkInfo() {
       }
     });
   }
+  mainWindow.webContents.send('save-network-info', { macAddress, ipAddress });
   return { macAddress, ipAddress };
 }
 
@@ -150,7 +150,6 @@ ipcMain.on('close-window', async () => {
       const outputDir = path.join(app.getPath('userData'), 'output');
       deleteFilesInDirectory(outputDir);
     });
-
     app.quit();
   }
 });
@@ -161,74 +160,51 @@ ipcMain.handle('get-output-path', () => {
   return outputDir; // Return the path to the renderer process
 });
 
-// Auto-update events
+// Auto-updater events
 autoUpdater.on('update-available', (info) => {
-  if (isDownloading) {
-    console.log('Update is already downloading.\nSkipping new prompt.');
-    return;
-  }
-
   const newVersion = info.version;
+  const message = `A new version (${newVersion}) is available.\nDownload started in the background.`;
 
-  dialog
-    .showMessageBox(mainWindow, {
-      type: 'info',
-      buttons: ['Download', 'Cancel'],
-      title: 'Update Available',
-      message: `A new version (${newVersion}) is available.\nDownloading now...`,
-    })
-    .then((result) => {
-      if (result.response === 0) {
-        isDownloading = true;
-        autoUpdater.downloadUpdate();
-      } else {
-        console.log('User declined the update download.');
-      }
-    });
+  showNotification('Update Available', message);
+
+  autoUpdater.downloadUpdate();
 });
 
-// Handle download progress
-autoUpdater.on('download-progress', (progress) => {
-  if (mainWindow && mainWindow.webContents) {
-    mainWindow.webContents.send('update-download-progress', progress);
-  }
+
+autoUpdater.on('download-progress', (progressObj) => {
+  mainWindow.setProgressBar(progressObj.percent / 100);
 });
 
-// Handle when the update is fully downloaded
 autoUpdater.on('update-downloaded', () => {
-  isDownloading = false; // Reset the flag when the download is complete
+  const message = 'The update has been downloaded and is ready to install.\nRestart the app to apply the update.';
 
-  if (mainWindow && mainWindow.webContents) {
-    mainWindow.webContents.send('update-complete');
-  }
+  showNotification('Update Ready', message);
 
-  dialog
-    .showMessageBox(mainWindow, {
-      type: 'info',
-      buttons: ['Restart', 'Later'],
-      title: 'Update Ready',
-      message: 'Update has been downloaded.\nIt will be installed on restart.',
-    })
-    .then((result) => {
-      if (result.response === 0) {
-        autoUpdater.quitAndInstall(); // Restart the app and install the update
-      }
-    });
+  mainWindow.setProgressBar(1);
+
+  dialog.showMessageBox(mainWindow, {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Update Ready',
+    message: 'The update has been downloaded and is ready to install.\nRestart to apply?',
+  }).then((response) => {
+    if (response.response === 0) {
+      autoUpdater.quitAndInstall();
+    }
+  });
 });
 
-// Handle errors
-autoUpdater.on('error', (error) => {
-  console.error('Auto-updater error:', error);
-  isDownloading = false; // Reset the flag if there's an error
+autoUpdater.on('error', (err) => {
+  console.error('Error occurred during update:', err);
+  mainWindow.setProgressBar(-1);
+  showNotification('Update Error', `An error occurred during the update: ${err.message}`);
 });
 
-// Initialize app and create the main window
+// End of Auto Updater
+
 app.whenReady().then(() => {
   createWindow();
-
   autoUpdater.checkForUpdates();
-  setInterval(() => autoUpdater.checkForUpdates(), 300 * 1000); // Check for updates every 5 minutes
-
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
@@ -291,6 +267,19 @@ ipcMain.on('save-excel', (event, { fileName, fileBuffer }) => {
 ipcMain.on('redirect-to-dashboard', (event) => {
   const currentWindow = BrowserWindow.getFocusedWindow();
   if (currentWindow) {
-      currentWindow.loadFile('./pages/dashboard.html');
+    currentWindow.loadFile('./pages/dashboard.html');
   }
 });
+
+// Function to show a notification
+function showNotification(title, message) {
+  const notification = new Notification({
+    title: "Refurb-Plus - "+title,
+    icon: path.join(__dirname, 'assets/build/favicon-1.ico'),
+    silent: false,
+    sound: 'default',
+    body: message,
+  });
+
+  notification.show();
+}
