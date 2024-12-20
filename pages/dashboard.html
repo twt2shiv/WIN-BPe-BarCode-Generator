@@ -52,7 +52,10 @@
 
         <div id="main-dashboard" style="display: block;">
             <div class="sh-pagetitle">
-                <span id="appVersion" style="font-size: 13px;">Loading...</span>
+                <div class="rightSection">
+                    <span id="appVersion" style="font-size: 13px; float: right;">Loading...</span><br/>
+                    <span id="appUserName" style="font-size: 13px; font-weight: bold;">Loading...</span>
+                </div>
                 <div class="sh-pagetitle-left">
                     <div class="sh-pagetitle-icon"><i class="icon fa fa-home"></i></div>
                     <div class="sh-pagetitle-title">
@@ -131,37 +134,19 @@
                             <div class="col-sm-6 mg-t-10 mg-md-t-0 disabled">
                                 <a href="#" class="shortcut-icon">
                                     <div>
-                                        <i class="icon fa fa-lock"></i>
-                                        <span>NFC LOCKING</span>
+                                        <i class="icon fa fa-cogs"></i>
+                                        <span>APP SETTING</span>
                                     </div>
                                 </a>
                             </div>
                         </div>
-                        <!-- <div class="card bd-primary">
-                            <div class="card-body" style="min-height: 280px; max-height: 280px;">
-                                Server Status - <span id="serverStatus">Checking...</span>
-                                <br />
-                                <br />
-                                Printer -<br />
-                                <span id="printerStatus" style="font-size: 13px;">Checking...</span>
-                                <br />
-                                <br />
-                                App Version:
-                                <br />
-                                <span id="appVersion" style="font-size: 13px;">Loading...</span>
-                                <br />
-                                <br />
-                                MAC Address: <span id="macAddress">Loading...</span><br />
-                                IP Address: <span id="ipAddress">Loading...</span>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="./../assets/js/dashboard.js"></script>
     <script src="./../assets/js/common.js"></script>
+    <script src="./../assets/js/dashboard.js"></script>
 </body>
 
 </html>

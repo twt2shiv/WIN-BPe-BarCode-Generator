@@ -19,23 +19,24 @@
         <div class="sh-headpanel-left">
         </div>
         <div class="sh-headpanel-right">
-            <!-- <div class="dropdown" style="margin-left: -35px;">
+            <div class="dropdown" style="margin-left: -35px;" id="minimize-link">
                 <a class="dropdown-link dropdown-link-notification">
                     <i class="icon fa fa-window-minimize tx-24" style="margin-bottom: 10px;"></i>
                 </a>
             </div>
-            <div class="dropdown" style="margin-left: 15px;">
+            <div class="dropdown" style="margin-left: 15px;" id="close-link">
                 <a class="dropdown-link dropdown-link-notification">
-                    <i class="icon fa fa-times font-danger tx-24"></i>
+                    <i class="icon fa fa-times tx-24"></i>
                 </a>
-            </div> -->
+            </div>
         </div>
     </div>
 
     <div class="sh-mainpanel">
         <div class="sh-pagetitle">
-            <div class="input-group">
-                <input type="search" class="form-control" placeholder="Search">
+            <div class="rightSection">
+                <span id="appVersion" style="font-size: 13px; float: right;">Loading...</span><br/>
+                <span id="appUserName" style="font-size: 13px; font-weight: bold;">Loading...</span>
             </div>
             <div class="sh-pagetitle-left">
                 <div class="sh-pagetitle-icon"><i class="icon fa fa-newspaper-o"></i></div>
@@ -68,8 +69,8 @@
             </div>
         </div>
     </div>
-    <script src="./../assets/js/sticker.js" defer></script>
     <script src="./../assets/js/common.js"></script>
+    <script src="./../assets/js/sticker.js" defer></script>
 </body>
 
 </html>

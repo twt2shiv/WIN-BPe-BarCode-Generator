@@ -27,7 +27,7 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadFile('./pages/dashboard.html');
+  mainWindow.loadFile('./pages/login.html');
 
   // Handle window close
   mainWindow.on('closed', () => {
@@ -142,7 +142,7 @@ ipcMain.on('close-window', async () => {
     type: 'question',
     buttons: ['Cancel', 'YES - Please Close'],
     title: 'Confirm',
-    message: 'Are you sure?\nYou want to close the application?\n',
+    message: 'Are you sure?',
   });
 
   if (response.response === 1) {
@@ -286,4 +286,11 @@ ipcMain.on('save-excel', (event, { fileName, fileBuffer }) => {
   }).catch(err => {
     event.sender.send('show-error', `Error saving file: ${err.message}`);
   });
+});
+
+ipcMain.on('redirect-to-dashboard', (event) => {
+  const currentWindow = BrowserWindow.getFocusedWindow();
+  if (currentWindow) {
+      currentWindow.loadFile('./pages/dashboard.html');
+  }
 });

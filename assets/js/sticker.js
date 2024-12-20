@@ -1,5 +1,4 @@
 const JsBarcode = require('jsbarcode');
-const { ipcRenderer } = require('electron');
 const fs = require('fs');
 const path = require('path');
 

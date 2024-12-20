@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="./../assets/css/shamcey.css">
 </head>
 
-<body ondragstart="return false" onselectstart="return false" oncontextmenu="return false" oncopy="return false" oncut="return false">
+<body ondragstart="return false" onselectstart="return false" oncontextmenu="return false" oncopy="return false"
+    oncut="return false">
     <div class="sh-logopanel">
         <a class="sh-logo-text" href="./dashboard.html">MsCorpres Barcode Generator</a>
         <a class="sh-navicon d-xl-block" href="./dashboard.html">
@@ -19,23 +20,24 @@
         <div class="sh-headpanel-left">
         </div>
         <div class="sh-headpanel-right">
-            <!-- <div class="dropdown" style="margin-left: -35px;">
+            <div class="dropdown" style="margin-left: -35px;" id="minimize-link">
                 <a class="dropdown-link dropdown-link-notification">
                     <i class="icon fa fa-window-minimize tx-24" style="margin-bottom: 10px;"></i>
                 </a>
             </div>
-            <div class="dropdown" style="margin-left: 15px;">
+            <div class="dropdown" style="margin-left: 15px;" id="close-link">
                 <a class="dropdown-link dropdown-link-notification">
-                    <i class="icon fa fa-times font-danger tx-24"></i>
+                    <i class="icon fa fa-times tx-24"></i>
                 </a>
-            </div> -->
+            </div>
         </div>
     </div>
 
     <div class="sh-mainpanel">
         <div class="sh-pagetitle">
-            <div class="input-group">
-                <input type="search" class="form-control" placeholder="Search">
+            <div class="rightSection">
+                <span id="appVersion" style="font-size: 13px; float: right;">Loading...</span><br />
+                <span id="appUserName" style="font-size: 13px; font-weight: bold;">Loading...</span>
             </div>
             <div class="sh-pagetitle-left">
                 <div class="sh-pagetitle-icon"><i class="icon fa fa-barcode"></i></div>
@@ -53,7 +55,8 @@
                         <div class="row">
                             <div class="col-sm-12 mg-t-10">
                                 <input class="form-control" placeholder="SCAN SR No. - XXXX XXXX XXX" type="text"
-                                    autocomplete="off" id="serialNumber" minlength="11" maxlength="11" autofocus required>
+                                    autocomplete="off" id="serialNumber" minlength="11" maxlength="11" autofocus
+                                    required>
                             </div>
                             <div class="col-sm-12 mg-t-10">
                                 <select class="form-control" id="operator">
@@ -69,7 +72,7 @@
                             <div class="col-sm-12 mg-t-10">
                                 <input class="form-control" placeholder="QR URL" type="text" autocomplete="off"
                                     id="qrURL" required>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="mg-t-10 text-right">
                             <button type="reset" class="btn btn-secondary mg-r-5" id="cancelForm">
@@ -87,8 +90,8 @@
             </div>
         </div>
     </div>
-    <script src="./../assets/js/mono.js" defer></script>
     <script src="./../assets/js/common.js"></script>
+    <script src="./../assets/js/mono.js" defer></script>
 </body>
 
 </html>

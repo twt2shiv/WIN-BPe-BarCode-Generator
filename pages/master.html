@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="./../assets/css/shamcey.css">
 </head>
 
-<body ondragstart="return false" onselectstart="return false" oncontextmenu="return false" oncopy="return false" oncut="return false">
+<body ondragstart="return false" onselectstart="return false" oncontextmenu="return false" oncopy="return false"
+    oncut="return false">
     <div class="sh-logopanel">
         <a class="sh-logo-text" href="./dashboard.html">MsCorpres Barcode Generator</a>
         <a class="sh-navicon d-xl-block" href="./dashboard.html">
@@ -19,23 +20,24 @@
         <div class="sh-headpanel-left">
         </div>
         <div class="sh-headpanel-right">
-            <!-- <div class="dropdown" style="margin-left: -35px;">
+            <div class="dropdown" style="margin-left: -35px;" id="minimize-link">
                 <a class="dropdown-link dropdown-link-notification">
                     <i class="icon fa fa-window-minimize tx-24" style="margin-bottom: 10px;"></i>
                 </a>
             </div>
-            <div class="dropdown" style="margin-left: 15px;">
+            <div class="dropdown" style="margin-left: 15px;" id="close-link">
                 <a class="dropdown-link dropdown-link-notification">
-                    <i class="icon fa fa-times font-danger tx-24"></i>
+                    <i class="icon fa fa-times tx-24"></i>
                 </a>
-            </div> -->
+            </div>
         </div>
     </div>
 
     <div class="sh-mainpanel">
         <div class="sh-pagetitle">
-            <div class="input-group">
-                <input type="search" class="form-control" placeholder="Search">
+            <div class="rightSection">
+                <span id="appVersion" style="font-size: 13px; float: right;">Loading...</span><br />
+                <span id="appUserName" style="font-size: 13px; font-weight: bold;">Loading...</span>
             </div>
             <div class="sh-pagetitle-left">
                 <div class="sh-pagetitle-icon"><i class="icon fa fa-qrcode"></i></div>
@@ -115,7 +117,8 @@
                                     autocomplete="off" id="serialNumber" minlength="15" maxlength="15" autofocus>
                             </div>
                             <div class="col-sm-12 mg-t-10">
-                                    <div id="serialContainer" style="overflow: auto; height: 275px; border: 1px solid #ccc; padding: 5px;"></div>
+                                <div id="serialContainer"
+                                    style="overflow: auto; height: 275px; border: 1px solid #ccc; padding: 5px;"></div>
                                 <div class="sk-rotating-plane bg-gray-800" id="loader" style="display: none;"></div>
                             </div>
                         </div>
@@ -124,8 +127,8 @@
             </form>
         </div>
     </div>
-    <script src="./../assets/js/master2.js" defer></script>
     <script src="./../assets/js/common.js"></script>
+    <script src="./../assets/js/master2.js" defer></script>
 
 </body>
 

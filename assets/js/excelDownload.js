@@ -1,4 +1,3 @@
-const { ipcRenderer } = require('electron');
 const XLSX = require('xlsx');
 
 document.addEventListener('DOMContentLoaded', () => {

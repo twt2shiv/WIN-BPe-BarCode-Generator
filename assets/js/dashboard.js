@@ -1,12 +1,3 @@
-const { ipcRenderer } = require('electron');
-
-// Fetch and update app version
-ipcRenderer.invoke('get-app-version').then((version) => {
-    document.getElementById('appVersion').innerText = 'v:'+version || 'v: Unknown';
-}).catch(() => {
-    document.getElementById('appVersion').innerText = 'v: Unknown';
-});
-
 // Fetch and update server status
 ipcRenderer.invoke('get-server-status').then((status) => {
     document.getElementById('serverStatus').innerText = status ? 'Online' : 'Offline';
@@ -24,17 +15,6 @@ ipcRenderer.invoke('get-printer-info')
         console.error('Error fetching printer status:', error);
         document.getElementById('printerStatus').innerText = 'NA';
     });
-
-
-// Minimize window functionality
-document.getElementById('minimize-link').addEventListener('click', () => {
-    ipcRenderer.send('minimize-window');
-});
-
-// Close window functionality
-document.getElementById('close-link').addEventListener('click', () => {
-    ipcRenderer.send('close-window');
-});
 
 // Fetch and update network info (MAC address and IP address)
 ipcRenderer.invoke('get-network-info').then((networkInfo) => {
