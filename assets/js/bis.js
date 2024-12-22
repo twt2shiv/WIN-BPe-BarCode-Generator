@@ -74,6 +74,7 @@ async function downloadLabel(fileName, labelHTML) {
     try {
         const outputDir = await ipcRenderer.invoke('get-output-path');
         const filePath = path.join(outputDir, `${fileName}_BIS-Label.html`);
+        const pageSizeMM = { width: 29, height: 29 };
 
         // Ensure the output directory exists
         if (!fs.existsSync(outputDir)) {
@@ -85,7 +86,7 @@ async function downloadLabel(fileName, labelHTML) {
         ipcRenderer.send('show-info', `File created successfully at ${filePath}`);
 
         // Automatically print the generated file
-        printGeneratedFile(filePath);
+        printGeneratedFile(filePath, pageSizeMM);
         bisIMEINumber.value = '';
         bisIMEINumber.focus();
         return;
@@ -97,8 +98,8 @@ async function downloadLabel(fileName, labelHTML) {
 
 
 // Function to print the generated file
-function printGeneratedFile(filePath) {
-    ipcRenderer.send('print-file', filePath);
+function printGeneratedFile(filePath, pageSizeMM) {
+    ipcRenderer.send('print-file', filePath, pageSizeMM);
 }
 
 // Function to toggle loader visibility

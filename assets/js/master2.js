@@ -3,7 +3,7 @@ const QRCode = require('qrcode');
 const path = require('path');
 const fs = require('fs');
 
-const LOT_SIZE = 30;
+const LOT_SIZE = 2;
 
 const form = document.getElementById("masterForm");
 const generateButton = document.getElementById("generateMasterQRcode");
@@ -91,6 +91,11 @@ serialInput.addEventListener("keydown", function (event) {
 
         renderSerialList();
         updateTotalScanned();
+
+        // Auto-submit when 30 serials are scanned
+        if (scannedSerials.size === LOT_SIZE) {
+            generateButton.click();
+        }
     }
 });
 
@@ -203,16 +208,24 @@ async function downloadLabel(fileName, labelHTML) {
     try {
         const outputDir = await ipcRenderer.invoke('get-output-path');
         const filePath = path.join(outputDir, `${fileName}_master-label.html`);
+        const pageSizeMM = { width: 100, height: 150 };
+
+
         if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
 
         await fs.promises.writeFile(filePath, labelHTML);
-        ipcRenderer.send('print-file', filePath);
+        printGeneratedFile(filePath, pageSizeMM);
         form.reset();
         serialInput.focus();
+        return;
     } catch (err) {
         console.error('Error saving label:', err);
         showError("An error occurred while saving the label.");
     }
+}
+
+function printGeneratedFile(filePath, pageSizeMM) {
+    ipcRenderer.send('print-file', filePath, pageSizeMM);
 }
 
 // Initialize

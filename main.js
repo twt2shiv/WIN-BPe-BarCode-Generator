@@ -4,6 +4,8 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const axios = require('axios');
+const { spawn } = require('child_process');
+
 
 let mainWindow; // Global variable for the main window
 
@@ -20,6 +22,7 @@ function createWindow() {
     autoHideMenuBar: true,
     frame: false,
     title: "Refurb-Plus",
+    alwaysOnTop: true,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -89,8 +92,13 @@ ipcMain.handle('get-server-status', async () => {
   }
 });
 
-// Handle print file request
-ipcMain.on('print-file', (event, filePath) => {
+
+
+const acrobatExecutablePath = path.join('C:', 'Program Files', 'Adobe', 'Acrobat DC', 'Acrobat', 'Acrobat.exe');
+
+ipcMain.on('print-file', async (event, filePath, pageSizeMM) => {
+  console.log('Received print-file event with filePath:', filePath);
+
   const printWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -105,15 +113,70 @@ ipcMain.on('print-file', (event, filePath) => {
 
   printWindow.loadFile(filePath);
 
-  printWindow.webContents.once('did-finish-load', () => {
-    printWindow.webContents.print({ silent: false, printBackground: true }, (success, errorType) => {
-      if (!success) {
-        event.reply('print-result', { success: false, error: errorType });
-      } else {
-        event.reply('print-result', { success: true });
+  printWindow.webContents.once('did-finish-load', async () => {
+    try {
+      const outputDir = path.join(app.getPath('userData'), 'output');
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
       }
+
+      // Generate the PDF
+      const pdfData = await printWindow.webContents.printToPDF({
+        printBackground: true,
+        landscape: false,
+        marginsType: 0,
+        pageSize: {
+          width: pageSizeMM.width / 25.4,
+          height: pageSizeMM.height / 25.4
+        },
+      });
+
+      // Save the PDF to the output directory
+      const pdfPath = path.join(outputDir, `${path.basename(filePath, '.html')}.pdf`);
+      fs.writeFileSync(pdfPath, pdfData);
+
+      // Check if Adobe Acrobat is installed
+      if (!fs.existsSync(acrobatExecutablePath)) {
+        dialog.showMessageBox({
+          type: 'error',
+          message: 'Adobe Acrobat Reader is not installed on your system.\nPlease install it to print the PDF automatically.',
+          buttons: ['OK'],
+        });
+        return;
+      }
+
+      // Prepare and execute the print command
+      const printProcess = spawn(acrobatExecutablePath, ['/t', pdfPath]);
+
+      printProcess.stdout.on('data', (data) => {
+        console.log('Adobe Acrobat stdout:', data.toString());
+      });
+
+      printProcess.stderr.on('data', (data) => {
+        console.error('Adobe Acrobat stderr:', data.toString());
+      });
+
+      printProcess.on('close', (code) => {
+        if (code === 0) {
+          event.reply('print-result', { success: true, message: 'PDF printed successfully.' });
+          printProcess.kill();
+        } else {
+          console.error('Error printing the PDF, process exit code:', code);
+          event.reply('print-result', { success: false, error: `Error printing the PDF. Process exit code: ${code}` });
+        }
+      });
+
+      printProcess.on('error', (err) => {
+        console.error('Error executing print process:', err);
+        event.reply('print-result', { success: false, error: `Error executing print process: ${err.message}` });
+      });
+
       printWindow.close();
-    });
+    } catch (error) {
+      console.error('Error generating or printing PDF:', error);
+      event.reply('print-result', { success: false, error: error.message });
+      printWindow.close();
+    }
   });
 });
 
@@ -170,7 +233,6 @@ autoUpdater.on('update-available', (info) => {
   autoUpdater.downloadUpdate();
 });
 
-
 autoUpdater.on('download-progress', (progressObj) => {
   mainWindow.setProgressBar(progressObj.percent / 100);
 });
@@ -204,6 +266,7 @@ autoUpdater.on('error', (err) => {
 
 app.whenReady().then(() => {
   createWindow();
+  detectAdobeAcrobat();
   autoUpdater.checkForUpdates();
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -274,7 +337,7 @@ ipcMain.on('redirect-to-dashboard', (event) => {
 // Function to show a notification
 function showNotification(title, message) {
   const notification = new Notification({
-    title: "Refurb-Plus - "+title,
+    title: "Refurb-Plus - " + title,
     icon: path.join(__dirname, 'assets/build/favicon-1.ico'),
     silent: false,
     sound: 'default',

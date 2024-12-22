@@ -158,12 +158,14 @@ async function downloadLabel(fileName, labelHTML) {
     try {
         const outputDir = await ipcRenderer.invoke('get-output-path');
         const filePath = path.join(outputDir, `${fileName}_mono-label.html`);
+        const pageSizeMM = { width: 45, height: 45 };
+
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true });
         }
 
         await fs.promises.writeFile(filePath, labelHTML);
-        printGeneratedFile(filePath);
+        printGeneratedFile(filePath, pageSizeMM);
         form.reset(); serialNumber.focus();
         return;
     } catch (err) {
@@ -172,6 +174,6 @@ async function downloadLabel(fileName, labelHTML) {
     }
 }
 
-function printGeneratedFile(filePath) {
-    ipcRenderer.send('print-file', filePath);
+function printGeneratedFile(filePath, pageSizeMM) {
+    ipcRenderer.send('print-file', filePath, pageSizeMM);
 }

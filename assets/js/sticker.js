@@ -105,6 +105,7 @@ async function downloadLabel(fileName, labelHTML) {
     try {
         const outputDir = await ipcRenderer.invoke('get-output-path');
         const filePath = path.join(outputDir, `${fileName}_sticker-label.html`);
+        const pageSizeMM = { width: 40, height: 20 };
 
         // Ensure the output directory exists
         if (!fs.existsSync(outputDir)) {
@@ -116,7 +117,7 @@ async function downloadLabel(fileName, labelHTML) {
         ipcRenderer.send('show-info', `File created successfully at ${filePath}`);
 
         // Automatically print the generated file
-        printGeneratedFile(filePath);
+        printGeneratedFile(filePath, pageSizeMM);
         inputNumber.value = '';
         inputNumber.focus();
         return;
@@ -128,8 +129,8 @@ async function downloadLabel(fileName, labelHTML) {
 
 
 // Function to print the generated file
-function printGeneratedFile(filePath) {
-    ipcRenderer.send('print-file', filePath);
+function printGeneratedFile(filePath, pageSizeMM) {
+    ipcRenderer.send('print-file', filePath, pageSizeMM);
 }
 
 // Function to toggle loader visibility
