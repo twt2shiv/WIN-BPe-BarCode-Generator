@@ -8,7 +8,8 @@
     "start": "electron-forge start",
     "dev": "nodemon --watch main.js --exec \"electron .\"",
     "prod": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "build-msi": "electron-builder --win --x64"
   },
   "build": {
     "appId": "com.bpe-barcode-generator.mscorpres",
@@ -18,7 +19,7 @@
       "buildResources": "build"
     },
     "win": {
-      "target": "nsis",
+      "target": ["nsis", "msi"],
       "icon": "assets/build/favicon-1.ico"
     },
     "nsis": {
