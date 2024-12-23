@@ -133,6 +133,7 @@ ipcMain.on('print-file', async (event, filePath, pageSizeMM) => {
 
       // Save the PDF to the output directory
       const pdfPath = path.join(outputDir, `${path.basename(filePath, '.html')}.pdf`);
+      
       fs.writeFileSync(pdfPath, pdfData);
 
       // Check if Adobe Acrobat is installed
@@ -157,7 +158,7 @@ ipcMain.on('print-file', async (event, filePath, pageSizeMM) => {
       });
 
       printProcess.on('close', (code) => {
-        if (code === 0) {
+        if (code !== 0) {
           event.reply('print-result', { success: true, message: 'PDF printed successfully.' });
         } else {
           console.error('Error printing the PDF, process exit code:', code);

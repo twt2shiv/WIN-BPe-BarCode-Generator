@@ -38,23 +38,26 @@ document.getElementById('close-link').addEventListener('click', () => {
 const authToken = localStorage.getItem('authToken');
 const currentPage = window.location.pathname.split('/').pop();
 
-if (!authToken && currentPage !== 'login.html') {
-  console.log('Redirecting to login page...');
-  // window.location.replace('login.htmll');
-} else if (authToken) {
-  console.log('User is logged in');
-  const userName = localStorage.getItem('userName');
-  if (userName) {
-    console.log('User name:', userName);
-    setTimeout(() => {
-      document.getElementById('appUserName').innerText = "LoggedIn as :" + userName;
-    }, 500);
-  } else {
-    console.log('User name not found');
-    localStorage.clear();
+
+// If token already exist login auto
+if (!authToken) {
+  if (currentPage !== 'login.html') {
     window.location.replace('login.html');
   }
+} else {
+  if (currentPage === 'login.html') {
+    window.location.replace('dashboard.html');
+  } else {
+    const userName = localStorage.getItem('userName');
+    if (userName) {
+      document.getElementById('appUserName').innerText = `LoggedIn as: ${userName}`;
+    } else {
+      localStorage.clear();
+      window.location.replace('login.html');
+    }
+  }
 }
+
 
 ipcRenderer.on('save-network-info', (event, data) => {
   const { macAddress, ipAddress } = data;

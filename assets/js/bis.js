@@ -110,7 +110,6 @@ function toggleLoader(isLoading) {
 
 ipcRenderer.on('print-result', (event, result) => {
     if (result.success) {
-        console.log(result.message);
         bisIMEINumber.focus();
     } else {
         console.error(result.error);
