@@ -3,7 +3,7 @@ const QRCode = require('qrcode');
 const path = require('path');
 const fs = require('fs');
 
-const LOT_SIZE = 2;
+const LOT_SIZE = 30;
 
 const form = document.getElementById("masterForm");
 const generateButton = document.getElementById("generateMasterQRcode");
