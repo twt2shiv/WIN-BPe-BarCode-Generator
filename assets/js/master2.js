@@ -228,5 +228,14 @@ function printGeneratedFile(filePath, pageSizeMM) {
     ipcRenderer.send('print-file', filePath, pageSizeMM);
 }
 
+ipcRenderer.on('print-result', (event, result) => {
+    if (result.success) {
+        console.log(result.message);
+        serialInput.focus();
+    } else {
+        console.error(result.error);
+    }
+});
+
 // Initialize
 updateTotalScanned();

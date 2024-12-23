@@ -159,11 +159,11 @@ ipcMain.on('print-file', async (event, filePath, pageSizeMM) => {
       printProcess.on('close', (code) => {
         if (code === 0) {
           event.reply('print-result', { success: true, message: 'PDF printed successfully.' });
-          printProcess.kill();
         } else {
           console.error('Error printing the PDF, process exit code:', code);
           event.reply('print-result', { success: false, error: `Error printing the PDF. Process exit code: ${code}` });
         }
+        printProcess.kill();
       });
 
       printProcess.on('error', (err) => {

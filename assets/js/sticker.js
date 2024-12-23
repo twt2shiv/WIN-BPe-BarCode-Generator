@@ -138,3 +138,12 @@ function toggleLoader(isLoading) {
     document.getElementById('loader').style.display = isLoading ? 'block' : 'none';
     document.getElementById('generateBtn').disabled = isLoading;
 }
+
+ipcRenderer.on('print-result', (event, result) => {
+    if (result.success) {
+        console.log(result.message);
+        inputNumber.focus();
+    } else {
+        console.error(result.error);
+    }
+});

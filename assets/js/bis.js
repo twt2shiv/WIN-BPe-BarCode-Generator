@@ -107,3 +107,12 @@ function toggleLoader(isLoading) {
     document.getElementById('loader').style.display = isLoading ? 'block' : 'none';
     document.getElementById('generateBISBtn').disabled = isLoading;
 }
+
+ipcRenderer.on('print-result', (event, result) => {
+    if (result.success) {
+        console.log(result.message);
+        bisIMEINumber.focus();
+    } else {
+        console.error(result.error);
+    }
+});
