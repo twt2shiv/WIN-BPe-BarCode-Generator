@@ -98,7 +98,7 @@ form.addEventListener("submit", async function (event) {
         try {
             toggleLoader(true);
 
-            const response = await fetch(`https://tempbpe.mscorpres.net/win/QR/master`, {
+            const response = await fetch(`https://api-bpe.mscapi.live/win/QR/master`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

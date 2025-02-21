@@ -82,7 +82,7 @@ ipcMain.handle('get-app-version', () => {
 
 ipcMain.handle('get-server-status', async () => {
   try {
-    const response = await axios.get('https://tempbpe.mscorpres.net', {
+    const response = await axios.get('https://api-bpe.mscapi.live', {
       timeout: 30000, // 30-second timeout
     });
     return response.status === 200;

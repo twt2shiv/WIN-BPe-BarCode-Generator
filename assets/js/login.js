@@ -31,7 +31,7 @@ loginForm.addEventListener('submit', async (event) => {
     submitButton.textContent = "Please wait...";
 
     try {
-        const response = await fetch('https://tempbpe.mscorpres.net/auth/signin', {
+        const response = await fetch('https://api-bpe.mscapi.live/auth/signin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -72,7 +72,7 @@ function createBarcode(number) {
 
 // Function to fetch product data
 async function fetchProductData(number) {
-    const response = await fetch(`https://tempbpe.mscorpres.net/win/QR/sticker/${number}`, {
+    const response = await fetch(`https://api-bpe.mscapi.live/win/QR/sticker/${number}`, {
         method: 'GET',
         headers: {
             'x-token': localStorage.getItem('authToken'),
