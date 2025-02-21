@@ -62,7 +62,7 @@ form.addEventListener("submit", async function (event) {
 
             toggleLoader(true);
 
-            const response = await fetch(`https://api-bpe.mscapi.live/win/QR/mono/${formData.serialNumber}`, {
+            const response = await fetch(`https://tempbpe.mscorpres.net/win/QR/mono/${formData.serialNumber}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
