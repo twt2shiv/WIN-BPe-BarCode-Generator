@@ -18,6 +18,7 @@ loginForm.addEventListener('submit', async (event) => {
 
     const username = document.querySelector('input[name="username"]').value;
     const password = document.querySelector('input[name="password"]').value;
+    const server = document.querySelector('select[name="server"]').value;
     const submitButton = document.querySelector('button[type="submit"]');
 
     const payload = {
@@ -25,13 +26,20 @@ loginForm.addEventListener('submit', async (event) => {
         password: password
     };
 
+    // add session server
+    if (server == '0') {
+        ipcRenderer.send("show-error", "Please select a server"); return;
+    } else {
+        localStorage.setItem('server', server);
+    }
+
     // Disable button and change text to "Please wait..."
     submitButton.disabled = true;
     const originalText = submitButton.textContent;
     submitButton.textContent = "Please wait...";
 
     try {
-        const response = await fetch('https://api-bpe.mscapi.live/auth/signin', {
+        const response = await fetch( server + '/auth/signin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

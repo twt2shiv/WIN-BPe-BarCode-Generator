@@ -113,7 +113,7 @@ form.addEventListener("submit", async function (event) {
     try {
         toggleLoader(true);
 
-        const response = await fetch("https://api-bpe.mscapi.live/win/QR/master", {
+        const response = await fetch(localStorage.getItem('server') + "/win/QR/master", {
             method: 'POST',
             headers: {
                 'x-token': localStorage.getItem('authToken'),
