@@ -331,9 +331,17 @@ ipcMain.on('save-excel', (event, { fileName, fileBuffer }) => {
 ipcMain.on('redirect-to-dashboard', (event) => {
   const currentWindow = BrowserWindow.getFocusedWindow();
   if (currentWindow) {
-    currentWindow.loadFile('./pages/dashboard.html');
+      currentWindow.loadFile('./pages/dashboard.html');
   }
 });
+
+ipcMain.on('redirect-to-2fa', (event) => {
+  const currentWindow = BrowserWindow.getFocusedWindow();
+  if (currentWindow) {
+      currentWindow.loadFile('./pages/2fa.html');
+  }
+});
+
 
 // Function to show a notification
 function showNotification(title, message) {

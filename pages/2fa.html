@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link href="./../assets/css/font/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./../assets/css/shamcey.css">
+</head>
+
+<body ondragstart="return false" onselectstart="return false" oncontextmenu="return false" oncopy="return false"
+    oncut="return false">
+    <div class="sh-logopanel">
+    </div>
+
+    <div class="sh-headpanel">
+        <div class="sh-headpanel-left">
+        </div>
+        <div class="sh-headpanel-right">
+            <div class="dropdown" style="margin-left: -35px;" id="minimize-link">
+                <a class="dropdown-link dropdown-link-notification">
+                    <i class="icon fa fa-window-minimize tx-24" style="margin-bottom: 10px;"></i>
+                </a>
+            </div>
+            <div class="dropdown" style="margin-left: 15px;" id="close-link">
+                <a class="dropdown-link dropdown-link-notification">
+                    <i class="icon fa fa-times tx-24"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="sh-mainpanel" style="padding-top: 0px !important;">
+        <div class="signpanel-wrapper">
+            <div class="signbox">
+                <div class="signbox-header text-white">Provide 6 digit 2FA Code</div>
+                <div class="signbox-body">
+                    <form action="POST" autocomplete="off">
+                        <div class="form-group">
+                            <input type="tel" name="2fa" placeholder="000 000" class="form-control"
+                                autofocus required autocomplete="off" minlength="6" maxlength="6" pattern="[0-9]{6}">
+                        </div>
+                        <button class="btn btn-success btn-block" type="submit">Validate</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../assets/js/2fa.js"></script>
+</body>
+
+</html>
